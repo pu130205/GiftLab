@@ -1,0 +1,317 @@
+﻿@model GiftLab.ViewModels.HomeIndexViewModel
+
+@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<section class="gl-hero">
+    <!-- Bên trái: nội dung -->
+    <div class="gl-hero-text fade-in-left">
+        <h1 class="gl-hero-title">GiftLab</h1>
+
+        <p class="gl-hero-desc">
+            Mỗi một món quà nhỏ xinh ở GiftLab đều được tạo nên bằng đôi tay, gửi đến bạn kèm chút thương thương.
+            <span class="gl-hero-highlight">“small but sweet”</span> — những điều giản dị đôi khi lại chạm đến những cảm xúc thật to 💗
+        </p>
+
+        <div class="gl-hero-actions">
+            <a asp-controller="Shop" asp-action="Index" class="gl-btn gl-btn-primary">MUA NGAY</a>
+            <a asp-controller="About" asp-action="Index" class="gl-btn gl-btn-secondary">XEM THÊM</a>
+        </div>
+    </div>
+
+    <!-- Bên phải: hình minh hoạ -->
+    <div class="gl-hero-image fade-in-right">
+        <img src="~/images/home-1.png" alt="GiftLab handmade corner" />
+    </div>
+</section>
+
+<section class="gl-feature-bar">
+    <div class="gl-feature-track">
+        <div class="gl-feature-item">
+            <img src="~/images/freeship.png" alt="Feature 1" />
+        </div>
+
+        <div class="gl-feature-item">
+            <img src="~/images/thanhtoan.png" alt="Feature 2" />
+        </div>
+
+        <div class="gl-feature-item">
+            <img src="~/images/nguyenlieu.png" alt="Feature 3" />
+        </div>
+
+        <div class="gl-feature-item">
+            <img src="~/images/hotro.png" alt="Feature 4" />
+        </div>
+
+        <div class="gl-feature-item">
+            <img src="~/images/chinhsach.png" alt="Feature 5" />
+        </div>
+
+        <!-- Lặp lại để tạo vòng chạy liên tục -->
+        <div class="gl-feature-item">
+            <img src="~/images/freeship.png" alt="Feature 1" />
+        </div>
+
+        <div class="gl-feature-item">
+            <img src="~/images/thanhtoan.png" alt="Feature 2" />
+        </div>
+
+        <div class="gl-feature-item">
+            <img src="~/images/nguyenlieu.png" alt="Feature 3" />
+        </div>
+
+        <div class="gl-feature-item">
+            <img src="~/images/hotro.png" alt="Feature 4" />
+        </div>
+
+        <div class="gl-feature-item">
+            <img src="~/images/chinhsach.png" alt="Feature 5" />
+        </div>
+    </div>
+</section>
+
+<section class="gl-category">
+    <div class="gl-category-header">
+        <h2 class="gl-category-title cat-animate-left">
+            DANH MỤC SẢN PHẨM
+        </h2>
+
+        <a asp-controller="Shop" asp-action="Index" class="gl-category-link">Xem cửa hàng →</a>
+
+    </div>
+
+    <div class="gl-category-list">
+        <div class="gl-category-item cat-animate-up">
+            <a href="/shop?category=len-mem" class="gl-category-card">
+                <img src="~/images/cat-lenmem.png" alt="Len mềm" />
+            </a>
+        </div>
+
+        <div class="gl-category-item cat-animate-up">
+            <a href="/shop?category=dat-mau" class="gl-category-card">
+                <img src="~/images/cat-datmau.png" alt="Đất màu" />
+            </a>
+        </div>
+
+        <div class="gl-category-item cat-animate-up">
+            <a href="/shop?category=banh-ngot" class="gl-category-card">
+                <img src="~/images/cat-banhngot.png" alt="Bánh ngọt" />
+            </a>
+        </div>
+
+        <div class="gl-category-item cat-animate-up">
+            <a href="/shop?category=hat-cuom" class="gl-category-card">
+                <img src="~/images/cat-hatcuom.png" alt="Hạt cườm" />
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="gl-arrival">
+    <!-- Hình bên trái -->
+    <div class="gl-arrival-image arr-animate-left">
+        <img src="~/images/home-2.png" alt="Newest arrival" />
+    </div>
+
+    <!-- Text bên phải -->
+    <div class="gl-arrival-text arr-animate-right">
+        <h2 class="arrival-newest">Newest</h2>
+        <h2 class="arrival-title">ARRIVAL</h2>
+
+        <a href="/shop?tag=new-arrival"
+           class="gl-btn gl-btn-primary gl-arrival-btn">
+            MUA NGAY
+        </a>
+    </div>
+</section>
+
+<div class="collection-slider">
+    <button class="col-nav col-prev">&#10094;</button>
+
+    <div class="col-window">
+        <div class="col-track">
+
+            <a href="#" class="col-slide">
+                <img src="images/coll-chocolate.png" alt="Choco">
+            </a>
+            <a href="#" class="col-slide">
+                <img src="images/coll-cupcake.png" alt="Cupcake">
+            </a>
+            <a href="#" class="col-slide">
+                <img src="images/coll-cookies.png" alt="Cookies">
+            </a>
+            <a href="#" class="col-slide">
+                <img src="images/coll-tart.png" alt="Tart">
+            </a>
+            <a href="#" class="col-slide">
+                <img src="images/coll-flower.png" alt="Flower">
+            </a>
+            <a href="#" class="col-slide">
+                <img src="images/coll-bohong.png" alt="BoHong">
+            </a>
+            <a href="#" class="col-slide">
+                <img src="images/coll-fruits.png" alt="Fruits">
+            </a>
+            <a href="#" class="col-slide">
+                <img src="images/coll-xmas.png" alt="XMas">
+            </a>
+            <a href="#" class="col-slide">
+                <img src="images/coll-sale.png" alt="Sale">
+            </a>
+
+        </div>
+    </div>
+
+    <button class="col-nav col-next">&#10095;</button>
+</div>
+
+<section class="gl-best">
+    <div class="gl-best-header">
+        <h2 class="gl-best-title">SẢN PHẨM BÁN CHẠY</h2>
+        <a asp-controller="Shop" asp-action="Index" class="gl-best-link">Xem cửa hàng →</a>
+    </div>
+
+    <div class="gl-best-slider">
+        <button class="gl-best-arrow gl-best-prev">‹</button>
+
+        <div class="gl-best-viewport">
+            <div class="gl-best-track">
+                @foreach (var p in Model.BestSellerProducts)
+                {
+                    @await Html.PartialAsync("_ProductCard", p)
+                }
+            </div>
+        </div>
+
+        <button class="gl-best-arrow gl-best-next">›</button>
+    </div>
+</section>
+
+<link rel="stylesheet" href="~/css/bestseller.css" />
+<script src="~/js/bestseller.js"></script>
+
+<section class="gl-cake">
+    <div class="gl-cake-text fade-in-left">
+
+        <div class="cake-title-line">
+            <h2 class="cake-title-main">BÁNH</h2>
+            <h2 class="cake-title-sub">Ngọt</h2>
+        </div>
+
+        <p class="cake-desc">
+            GiftLab mang đến bộ tứ bánh ngọt siêu xinh: cupcake mềm mịn,
+            tart béo nhẹ, cookie giòn thơm và chocolate tan chảy – mỗi chiếc bánh
+            đều được chăm chút để mang lại chút ngọt ngào đủ làm vui cả một ngày. 🍰✨
+        </p>
+
+        <a href="/shop?category=banh-ngot" class="gl-btn-cake">MUA NGAY</a>
+
+    </div>
+
+    <!-- Hình bên phải -->
+    <div class="gl-cake-image arr-animate-right">
+        <img src="images/home-3.png" alt="Bánh ngọt" />
+    </div>
+</section>
+
+<section class="gl-why-section">
+    <div class="gl-why-container">
+        <h2 class="gl-why-title">Tại sao nên chọn GIFTLAB?</h2>
+
+        <div class="gl-why-grid">
+
+        <!-- 1: Tận tâm -->
+        <article class="gl-why-item why-1 fade-why">
+            <h3 class="gl-why-heading">Tận tâm trong từng chi tiết</h3>
+            <p class="gl-why-text">
+                GiftLab gửi trọn cảm xúc vào từng chiếc bánh, từng món quà 🎂💕
+            </p>
+        </article>
+
+        <!-- 2: Sáng tạo -->
+        <article class="gl-why-item why-2 fade-why">
+            <h3 class="gl-why-heading">Sáng tạo để khác biệt</h3>
+            <p class="gl-why-text">
+                Mỗi sản phẩm đều độc đáo và mang câu chuyện của riêng bạn 🎨🎁
+            </p>
+        </article>
+
+        <!-- 3: Chất lượng -->
+        <article class="gl-why-item why-3 fade-why">
+            <h3 class="gl-why-heading">Chất lượng chuẩn chỉnh</h3>
+            <p class="gl-why-text">
+                Chú trọng từ nguyên liệu đến quy trình sản xuất 🌈🌷
+            </p>
+        </article>
+
+        <!-- 4: Ngọt ngào -->
+        <article class="gl-why-item why-4 fade-why">
+            <h3 class="gl-why-heading">Ngọt ngào &amp; chân thành</h3>
+            <p class="gl-why-text">
+                Không chỉ ngon – mà là hạnh phúc gói gọn ✨
+            </p>
+        </article>
+
+        <!-- 5: Lan tỏa -->
+        <article class="gl-why-item why-5 fade-why">
+            <h3 class="gl-why-heading">Lan tỏa yêu thương</h3>
+            <p class="gl-why-text">
+                Một chút xinh yêu, đổi một nụ cười 😘🎀
+            </p>
+        </article>
+
+        <!-- 6: Khách hàng -->
+        <article class="gl-why-item why-6 fade-why">
+            <h3 class="gl-why-heading">Khách hàng là trung tâm</h3>
+            <p class="gl-why-text">
+                GiftLab luôn sẵn sàng cùng bạn gửi tặng yêu thương mọi dịp 💖😊
+            </p>
+        </article>
+        </div>
+    </div>
+</section>
+
+<section class="gl-text-marquee">
+    <div class="gl-text-track">
+        <span>Sweet Gifts for Sweet Moments 🎀</span>
+        <span>Sweet Gifts for Sweet Moments 🎀</span>
+        <span>Sweet Gifts for Sweet Moments 🎀</span>
+        <span>Sweet Gifts for Sweet Moments 🎀</span>
+
+        <!-- lặp lại để tạo vòng lặp mượt -->
+        <span>Sweet Gifts for Sweet Moments 🎀</span>
+        <span>Sweet Gifts for Sweet Moments 🎀</span>
+        <span>Sweet Gifts for Sweet Moments 🎀</span>
+        <span>Sweet Gifts for Sweet Moments 🎀</span>
+    </div>
+</section>
+
+<section class="gl-review">
+    <h2 class="gl-review-title">Khách hàng nói gì về GIFTLAB?</h2>
+
+    <div class="gl-review-inner">
+        <button type="button" class="gl-review-btn gl-review-prev">‹</button>
+
+        <div class="gl-review-viewport">
+            <div class="gl-review-track">
+                @for (int i = 0; i < Model.Reviews.Count; i++)
+                {
+                    var r = Model.Reviews[i];
+                    var stars = new string('★', Math.Clamp(r.Stars, 1, 5));
+
+                    <article class="gl-review-card">
+                        <div class="gl-review-stars">@stars</div>
+                        <p class="gl-review-text">@r.Content</p>
+                        <div class="gl-review-name">@r.Name</div>
+                    </article>
+                }
+            </div>
+        </div>
+
+        <button type="button" class="gl-review-btn gl-review-next">›</button>
+    </div>
+</section>
+
+<link rel="stylesheet" href="~/css/review.css" />
+<script defer src="~/js/review.js"></script>

@@ -1,0 +1,290 @@
+﻿﻿
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- CSS chính -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- ================= HEADER ================= -->
+    <header class="gl-header">
+
+        <!-- ========== TOP BAR (SLIDER NGANG) ========== -->
+        <div class="gl-top-bar">
+            <div class="gl-slider-horizontal">
+                <div class="gl-slide">✨ CHÀO MỪNG BẠN ĐẾN VỚI GIFTLAB ✨ </div>
+                <div class="gl-slide">MIỄN PHÍ VẬN CHUYỂN CHO ĐƠN HÀNG TỪ 300K</div>
+                <div class="gl-slide">GIẢM 20% CHO TOÀN BỘ SẢN PHẨM THUỘC BST MỚI RA MẮT</div>
+            </div>
+        </div>
+
+        <!-- ========== MAIN HEADER (ICONS + LOGO) ========== -->
+        <div class="gl-main-header">
+
+            <!-- Icons bên trái -->
+            <div class="gl-main-icons gl-main-icons-left">
+                <a href="#"><img src="~/images/fb-icon.png" class="gl-icon" alt="Facebook" /></a>
+                <a href="#"><img src="~/images/ig-icon.png" class="gl-icon" alt="Instagram" /></a>
+            </div>
+
+            <!-- Logo chính giữa -->
+            <div class="gl-logo-wrapper">
+                <a href="/">
+                    <img src="~/images/logo.png" class="gl-logo" alt="GiftLab" />
+                </a>
+            </div>
+
+            <!-- Icons bên phải -->
+            <div class="gl-main-icons gl-main-icons-right">
+
+                <form class="gl-search-inline" method="get" asp-controller="Shop" asp-action="Index" id="glSearchInlineForm">
+                    <span class="gl-search-inline-icon" aria-hidden="true">
+                        <img src="~/images/search-icon.png" class="gl-icon gl-search-inline-icon-img" alt="" />
+                    </span>
+
+                    <input type="text"
+                           name="q"
+                           id="glSearchInlineInput"
+                           class="gl-search-inline-input"
+                           placeholder="Tìm sản phẩm..."
+                           value="@(Context.Request.Query["q"].ToString())"
+                           autocomplete="off" />
+
+                    <button type="button"
+                            class="gl-search-inline-clear"
+                            id="glSearchInlineClear"
+                            aria-label="Xóa tìm kiếm">
+                        ×
+                    </button>
+                </form>
+
+                <!-- Các icon khác (PHẢI nằm trong div right này) -->
+                <a href="#"><img src="~/images/wishlist-icon.png" class="gl-icon" alt="Yêu thích" /></a>
+                <a asp-controller="Cart" asp-action="Index">
+                    <img src="~/images/cart-icon.png" class="gl-icon" alt="Giỏ hàng" />
+                </a>
+
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <a asp-controller="Account" asp-action="Dashboard">
+                        <img src="~/images/user-icon.png" class="gl-icon" alt="Tài khoản" />
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login">
+                        <img src="~/images/user-icon.png" class="gl-icon" alt="Tài khoản" />
+                    </a>
+                }
+
+            </div>
+
+        </div>
+        @if (TempData["ToastSuccess"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["ToastSuccess"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        }
+
+
+        <!-- ========== NAVIGATION MENU ========== -->
+        @{
+            var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        }
+
+        <nav class="gl-nav">
+            <ul class="gl-nav-list">
+                <li>
+                    <a asp-controller="Home" asp-action="Index"
+                       class="@(currentController == "Home" ? "active" : "")">
+                        TRANG CHỦ
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="About" asp-action="Index"
+                       class="@(currentController == "About" ? "active" : "")">
+                        VỀ CHÚNG TÔI
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Shop" asp-action="Index"
+                       class="@(currentController == "Shop" ? "active" : "")">
+                        CỬA HÀNG
+                    </a>
+                </li>
+                <li>
+                    <a href="/cute-things"
+                       class="@(currentController == "CuteThings" ? "active" : "")">
+                        ĐIỀU NHỎ XINH
+                    </a>
+                </li>
+                <li>
+                    <a href="/support"
+                       class="@(currentController == "Support" ? "active" : "")">
+                        HỖ TRỢ
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+    </header>
+
+    <button id="scrollToTopBtn" title="Trở về đầu trang">
+        <img src="~/images/sttop.png" alt="Mũi tên lên" />
+    </button>
+
+    <!-- ================= NỘI DUNG TRANG ================= -->
+    <div class="gl-container">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="gl-footer">
+        <div class="gl-footer-container">
+
+            <!-- Cột 1: Logo + bản quyền -->
+            <div class="gl-footer-col logo-col">
+                <img src="~/images/Logo (bản viền trắng).png" class="gl-footer-logo" alt="GiftLab" />
+                <p class="gl-footer-copy">Bản quyền © GiftLab 2025</p>
+            </div>
+
+            <!-- Cột 2: Chính sách -->
+            <div class="gl-footer-col">
+                <h3>Chính sách</h3>
+                <ul>
+                    <li><a href="#">Chính sách bảo mật</a></li>
+                    <li><a href="#">Chính sách đổi trả</a></li>
+                    <li><a href="#">Chính sách vận chuyển</a></li>
+                    <li><a href="#">Hướng dẫn mua hàng</a></li>
+                </ul>
+            </div>
+
+            <!-- Cột 3: Cửa hàng -->
+            <div class="gl-footer-col">
+                <h3>Cửa hàng</h3>
+                <ul>
+                    <li><a href="#">Len mềm</a></li>
+                    <li><a href="#">Đất màu</a></li>
+                    <li><a href="#">Hạt cườm</a></li>
+                    <li><a href="#">Bánh ngọt</a></li>
+                </ul>
+            </div>
+
+            <!-- Cột 4: Liên hệ -->
+            <div class="gl-footer-col">
+                <h3>Liên hệ</h3>
+                <ul class="gl-footer-contact">
+                    <li>📍 279 Nguyễn Trí Phương, P. Diên Hồng</li>
+                    <li>✉️ giftlab.store@gmail.com</li>
+                    <li>📞 +84 916 367 385</li>
+                </ul>
+            </div>
+
+        </div>
+    </footer>
+
+<!-- ===== Modals (đặt 1 lần) ===== -->
+<div class="modal fade" id="loginRequiredModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">Thông báo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p class="mb-3">Bạn cần đăng nhập để thực hiện hành động này.</p>
+                <a href="/Account/Login" class="btn btn-danger px-4">Đăng nhập</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TempData["OrderSuccess"] != null)
+{
+    <div class="modal fade" id="orderSuccessModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Thông báo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div style="font-size:44px; line-height:1;">🎉</div>
+                    <p class="mt-2 mb-2 fw-bold">Đặt hàng thành công!</p>
+
+                    <p class="mb-3">
+                        Mã đơn hàng của bạn là:
+                        <span class="fw-bold text-danger">#@TempData.Peek("OrderId")</span>
+                    </p>
+
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="/Account/Dashboard" class="btn btn-danger px-4">Tới Dashboard</a>
+                        <a href="/Shop" class="btn btn-outline-secondary px-4">Qua Cửa hàng</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+    <!-- ===== Scripts (đặt 1 lần, trước </body>) ===== -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+<script>
+    // Scroll to top
+    $(document).ready(function () {
+        var scrollButton = $("#scrollToTopBtn");
+        var scrollDistance = 300;
+
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > scrollDistance) scrollButton.fadeIn(200);
+            else scrollButton.fadeOut(200);
+        });
+
+        scrollButton.click(function () {
+            $('html, body').animate({ scrollTop: 0 }, 600);
+            return false;
+        });
+    });
+</script>
+
+<script>
+    // needLogin=1 -> show login modal
+    $(function () {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("needLogin") === "1") {
+            const modal = new bootstrap.Modal(document.getElementById("loginRequiredModal"));
+            modal.show();
+        }
+    });
+</script>
+
+@if (TempData["OrderSuccess"] != null)
+{
+    <script>
+        (function () {
+            var el = document.getElementById("orderSuccessModal");
+            if (!el) return;
+            var modal = new bootstrap.Modal(el);
+            modal.show();
+        })();
+    </script>
+}
+
+@RenderSection("Scripts", required: false)
+
+</body>
+</html>

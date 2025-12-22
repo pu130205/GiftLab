@@ -1,0 +1,278 @@
+@model List<GiftLab.ViewModels.Admin.AdminUserViewModel>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Users";
+}
+
+<div class="container-fluid p-4 p-lg-5">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Người dùng</h1>
+            <div class="text-muted">Debug: Model.Count = @(Model?.Count ?? 0)</div>
+            <p class="text-muted mb-0">Quản lý người dùng và quyền truy cập.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                <i class="bi bi-plus-lg me-2"></i>
+                Thêm
+            </button>
+            <button type="button" class="btn btn-outline-secondary" 
+                    data-bs-toggle="tooltip" 
+                    title="Xuất dữ liệu">
+                <i class="bi bi-download icon-hover"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Tất cả người dùng</h5>
+            <div class="input-group" style="width: 300px;">
+                <input type="text" class="form-control" placeholder="Tìm kiếm người dùng...">
+                <button class="btn btn-outline-secondary" type="button">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Người dùng</th>
+                            <th>Email</th>
+                            <th>Vai trò</th>
+                            <th>Trạng thái</th>
+                            <th>Tham gia</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var u in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="~/images/user-icon.png" alt="User" class="rounded-circle me-2" width="32" height="32">
+                                            <div>
+                                                <div class="fw-semibold">@u.FullName</div>
+                                                <small class="text-muted">@u.Username</small>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td>@u.Email</td>
+
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(u.RoleName))
+                                        {
+                                            <span class="badge bg-primary">@u.RoleName</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">No role</span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (u.Active)
+                                        {
+                                            <span class="badge bg-success">Hoạt động</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">Đang chờ / Tắt</span>
+                                        }
+                                    </td>
+
+                                    <td>@(u.CreateDate?.ToString("yyyy-MM-dd") ?? "")</td>
+
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary me-1"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editUserModal"
+                                                data-user-id="@u.AccountID"
+                                                data-user-name="@u.FullName"
+                                                data-user-email="@u.Email"
+                                                data-user-role="@u.RoleName"
+                                                data-user-status="@(u.Active ? "Active" : "Inactive")">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+
+                                        <button class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteUserModal"
+                                                data-user-id="@u.AccountID"
+                                                data-user-name="@u.FullName">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    Chưa có tài khoản nào trong hệ thống.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center mt-4">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Trước</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Sau</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">
+                    <i class="bi bi-person-plus me-2"></i>Thêm người dùng mới
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm">
+                    <div class="mb-3">
+                        <label for="addUserName" class="form-label">Họ và tên <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="addUserName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addUserEmail" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="addUserEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addUserUsername" class="form-label">Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="addUserUsername">
+                    </div>
+                    <div class="mb-3">
+                        <label for="addUserPassword" class="form-label">Mật khẩu <span class="text-danger">*</span></label>
+                        <input type="password" class="form-control" id="addUserPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addUserRole" class="form-label">Vai trò <span class="text-danger">*</span></label>
+                        <select class="form-select" id="addUserRole" required>
+                            <option value="">Chọn vai trò...</option>
+                            <option value="Admin">Quản trị viên</option>
+                            <option value="User">Người dùng</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addUserStatus" class="form-label">Trạng thái</label>
+                        <select class="form-select" id="addUserStatus">
+                            <option value="Active" selected>Hoạt động</option>
+                            <option value="Pending">Đang chờ</option>
+                            <option value="Inactive">Không hoạt động</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="handleAddUser()">Thêm người dùng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">
+                    <i class="bi bi-pencil me-2"></i>Chỉnh sửa người dùng
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <input type="hidden" id="editUserId">
+                    <div class="mb-3">
+                        <label for="editUserName" class="form-label">Họ và tên <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="editUserName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUserEmail" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="editUserEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUserUsername" class="form-label">Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="editUserUsername">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUserRole" class="form-label">Vai trò <span class="text-danger">*</span></label>
+                        <select class="form-select" id="editUserRole" required>
+                            <option value="">Chọn vai trò...</option>
+                            <option value="Admin">Quản trị viên</option>
+                            <option value="User">Người dùng</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUserStatus" class="form-label">Trạng thái</label>
+                        <select class="form-select" id="editUserStatus">
+                            <option value="Active">Active</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="handleEditUser()">Lưu thay đổi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete User Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="deleteUserModalLabel">
+                    <i class="bi bi-exclamation-triangle text-warning me-2"></i>Xác nhận xóa
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa người dùng <strong id="deleteUserName"></strong>?</p>
+                <p class="text-muted small mb-0">Hành động này không thể hoàn tác.</p>
+                <input type="hidden" id="deleteUserId">
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" onclick="handleDeleteUser()">Xóa người dùng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/admin/js/users.js" asp-append-version="true"></script>
+}
+

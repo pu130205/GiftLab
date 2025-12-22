@@ -1,0 +1,62 @@
+﻿@model GiftLab.Models.ProductCardViewModel
+
+@{
+    var productUrl = Url.Action("Details", "Shop", new { id = Model.Id });
+}
+
+<div class="bs-card-wrap" style="position: relative;">
+    <!-- Link đi trang chi tiết -->
+    <a href="@productUrl" class="bs-card-link" style="text-decoration: none; color: inherit; display:block;">
+        <div class="bs-card">
+            <div class="bs-image">
+                <img src="@Url.Content(Model.ImagePath)" alt="@Model.Name" />
+
+                <div class="bs-hover-icons">
+                    <button class="bs-icon-btn heart" type="button" title="Yêu thích"
+                            onclick="event.preventDefault(); event.stopPropagation();">
+                        <img src="@Url.Content("~/images/mini-heart.png")" alt="Yêu thích" />
+                    </button>
+
+                    <!-- Nút giỏ hàng sẽ submit form bên ngoài -->
+                    <button class="bs-icon-btn cart" type="button" title="Thêm vào giỏ hàng"
+                            onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('addCart-@Model.Id').submit();">
+                        <img src="@Url.Content("~/images/mini-cart.png")" alt="Giỏ hàng" />
+                    </button>
+                </div>
+
+                @if (Model.IsOnSale)
+                {
+                    <div class="bs-sale-badge">Giảm giá</div>
+                }
+            </div>
+
+            <div class="bs-info">
+                <div class="bs-info-top">
+                    <span class="bs-category">@Model.Category</span>
+                    <span class="bs-rating">⭐ @Model.Rating</span>
+                </div>
+
+                <h3 class="bs-name">@Model.Name</h3>
+
+                <div class="bs-price">
+                    <span class="bs-current">
+                        @Model.Price?.ToString("#,##0 đ")
+                    </span>
+
+                    @if (Model.OriginalPrice.HasValue)
+                    {
+                        <span class="bs-old">
+                            @Model.OriginalPrice?.ToString("#,##0 đ")
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+    </a>
+
+    <!-- Form add-to-cart: để ngoài <a> và ẩn đi -->
+    <form id="addCart-@Model.Id" asp-controller="Cart" asp-action="Add" method="post" style="display:none;">
+        <input type="hidden" name="productId" value="@Model.Id" />
+        <input type="hidden" name="quantity" value="1" />
+    </form>
+</div>

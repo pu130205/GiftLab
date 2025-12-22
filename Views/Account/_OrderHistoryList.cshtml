@@ -1,0 +1,207 @@
+﻿@model List<GiftLab.ViewModels.OrderHistoryCardVM>
+
+@{
+    string BadgeClass(GiftLab.ViewModels.OrderHistoryCardVM o)
+    {
+        if (o.StatusId == 4) return "bg-success";
+        if (o.StatusId == 3) return "bg-info";
+        if (o.StatusId == 1) return "bg-warning";
+        if (o.StatusId == 2) return "bg-primary";
+        return "bg-secondary";
+    }
+}
+
+<style>
+    .oh-card {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        border-radius: 12px;
+    }
+
+        .oh-card .card-body {
+            padding: 12px 14px;
+        }
+
+    /* ✅ Fit khung: cột co giãn + không tràn */
+    .oh-row {
+        display: grid;
+        grid-template-columns: 96px minmax(160px, 1fr) 100px 110px 120px;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .oh-meta .oh-id {
+        font-weight: 900;
+        font-size: 15px;
+    }
+
+    .oh-meta .oh-date {
+        font-size: 12px;
+        color: #888;
+    }
+
+    .oh-prod {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .oh-thumb {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        object-fit: cover;
+        flex: 0 0 auto;
+    }
+
+    .oh-prod-text {
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .oh-count {
+        font-weight: 800;
+        font-size: 14px;
+        line-height: 1.15;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    .oh-names {
+        font-size: 12px;
+        color: #777;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        max-width: 100%;
+    }
+
+    .oh-badge {
+        font-size: 12px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        white-space: nowrap;
+        justify-self: center;
+    }
+
+    /* Tìm đến .oh-price và thêm thuộc tính color */
+    .oh-price {
+        font-weight: 900;
+        font-size: 14px;
+        white-space: nowrap;
+        justify-self: end;
+        color: #ED708A; /* Thêm màu hồng ở đây */
+    }
+
+    .oh-action {
+        justify-self: end;
+    }
+
+        .oh-action .btn {
+            padding: 6px 10px;
+            font-size: 13px;
+            border-radius: 10px;
+            white-space: nowrap;
+            color: #ED708A;
+            border-color: #ED708A;
+        }
+
+        .oh-action .btn:hover {
+            background-color: #ED708A;
+            border-color: #ED708A;
+            color: #fff;
+        }
+
+    /* ✅ Mobile: xuống hàng gọn */
+    @@media (max-width: 992px) {
+        .oh-row {
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .oh-prod {
+            grid-column: 1 / -1;
+        }
+
+        .oh-badge {
+            justify-self: start;
+        }
+
+        .oh-price {
+            justify-self: start;
+        }
+
+        .oh-action {
+            grid-column: 1 / -1;
+            justify-self: end;
+        }
+    }
+</style>
+@{
+    string ImgSrc(string? thumb)
+    {
+        if (string.IsNullOrWhiteSpace(thumb)) return Url.Content("~/images/default.png");
+        thumb = thumb.Trim();
+
+        if (thumb.StartsWith("http", StringComparison.OrdinalIgnoreCase)) return thumb;
+        if (thumb.StartsWith("~/")) return Url.Content(thumb);
+        if (thumb.StartsWith("/")) return thumb;
+
+        // "images/a.jpg" -> "/images/a.jpg"
+        return "/" + thumb.TrimStart('/');
+    }
+}
+
+
+@if (Model == null || Model.Count == 0)
+{
+    <p class="text-muted text-center py-5">Không có đơn hàng nào.</p>
+}
+else
+{
+    foreach (var o in Model)
+    {
+        <div class="card mb-3 oh-card">
+            <div class="card-body">
+                <div class="oh-row">
+                    <div class="oh-meta">
+                        <div class="oh-id">#@o.OrderId</div>
+                        <div class="oh-date">@(o.OrderDate.HasValue? o.OrderDate.Value.ToString("dd/MM/yyyy") : "")</div>
+                    </div>
+
+                    <div class="oh-prod">
+                        <img class="oh-thumb"
+                             src="@ImgSrc(o.Thumb)"
+                             onerror="this.onerror=null;this.src='@Url.Content("~/images/default.png")';"
+                             alt="thumb" />
+                        <div class="oh-prod-text">
+                            <div class="oh-count">@o.ItemCount sản phẩm</div>
+                            <span class="oh-names">@o.ProductNames</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="badge oh-badge @BadgeClass(o)">@o.StatusText</span>
+                    </div>
+
+                    <div class="oh-price">
+                        @string.Format("{0:N0} đ", o.TotalAmount)
+                    </div>
+
+                    <div class="oh-action">
+                        <a asp-controller="Account" asp-action="OrderDetails" asp-route-id="@o.OrderId"
+                           class="btn btn-sm btn-outline-primary">
+                            Xem chi tiết
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

@@ -1,0 +1,330 @@
+﻿@model GiftLab.Models.AccountProfileViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Thông tin tài khoản";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+    :root {
+        --gl-pink: #ed708a;
+        --gl-pink-light: #fff0f3;
+        --gl-text: #333;
+        --gl-muted: #888;
+        --gl-bg: #f8f9fa;
+        --gl-border: #eee;
+    }
+
+    .acc-wrapper {
+        padding: 60px 0;
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .acc-card {
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(251, 111, 146, 0.3);
+        max-width: 1200px;
+        margin: auto;
+        padding: 50px;
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 60px;
+    }
+
+    /* SIDEBAR */
+    .acc-sidebar {
+        text-align: center;
+        border-right: 1px solid var(--gl-border);
+        padding-right: 30px;
+    }
+
+    .avatar-wrap {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: #f0f0f0;
+        margin: 0 auto 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 24px rgba(0,0,0,.07);
+    }
+
+        .avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .avatar-icon {
+        font-size: 42px;
+        color: #ccc;
+    }
+
+    .user-name {
+        font-weight: 900;
+        font-size: 20px;
+        margin: 0;
+    }
+
+    .user-email {
+        font-size: 14px;
+        color: var(--gl-muted);
+        margin-bottom: 16px;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-weight: 800;
+        font-size: 12px;
+        background: var(--gl-pink-light);
+        color: var(--gl-pink);
+        margin-bottom: 20px;
+    }
+
+    .nav-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        border-radius: 15px;
+        text-decoration: none;
+        color: var(--gl-text);
+        font-weight: 700;
+        transition: .3s;
+    }
+
+        .nav-item.active-gl {
+            background: var(--gl-pink-light);
+            color: var(--gl-pink);
+        }
+
+    .btn-logout-gl {
+        width: 100%;
+        background: var(--gl-pink);
+        color: #fff;
+        border: none;
+        padding: 15px;
+        border-radius: 15px;
+        font-weight: 800;
+        margin-top: 35px;
+        cursor: pointer;
+    }
+
+    /* MAIN */
+    .content-header h2 {
+        font-size: 30px;
+        font-weight: 900;
+        margin-bottom: 6px;
+    }
+
+    .subtext {
+        color: var(--gl-muted);
+        font-size: 14px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        margin-top: 25px;
+    }
+
+    .card-section {
+        border: 1px solid var(--gl-border);
+        border-radius: 18px;
+        padding: 22px;
+    }
+
+    .section-title {
+        font-weight: 900;
+        margin-bottom: 16px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .gl-label {
+        font-weight: 800;
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+
+    .gl-input {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid #e9e9e9;
+    }
+
+        .gl-input:focus {
+            border-color: var(--gl-pink);
+            outline: none;
+            box-shadow: 0 0 0 .2rem rgba(237,112,138,.15);
+        }
+
+    /* ACTION */
+    .actions-row {
+        margin-top: 45px;
+        text-align: center;
+    }
+
+    .btn-gl-fill {
+        background: var(--gl-pink);
+        color: #fff;
+        padding: 16px 40px;
+        border-radius: 16px;
+        font-weight: 900;
+        border: none;
+        font-size: 16px;
+        box-shadow: 0 8px 20px rgba(237,112,138,.25);
+        cursor: pointer;
+    }
+
+    @@media(max-width:992px) {
+        .acc-card {
+            grid-template-columns: 1fr;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="acc-wrapper">
+    <div class="container">
+        <div class="acc-card">
+
+            <!-- SIDEBAR -->
+            <aside class="acc-sidebar">
+                <div class="avatar-wrap">
+                    @if (!string.IsNullOrEmpty(Model?.Avatar))
+                    {
+                        <img src="@Url.Content(Model.Avatar)" />
+                    }
+                    else
+                    {
+                        <i class="fa-solid fa-circle-user avatar-icon"></i>
+                    }
+                </div>
+
+                <div class="user-name">@Model?.FullName</div>
+                <div class="user-email">@Model?.Email</div>
+
+                <div class="status-badge">
+                    @(Model?.Active ?? true ? "Tài khoản đang hoạt động" : "Tài khoản bị khóa")
+                </div>
+
+                <nav class="nav-menu">
+                    <a asp-action="Profile" class="nav-item active-gl">
+                        <i class="fa-regular fa-user"></i> Thông tin tài khoản
+                    </a>
+                    <a asp-action="OrderHistory" class="nav-item">
+                        <i class="fa-regular fa-rectangle-list"></i> Lịch sử đơn hàng
+                    </a>
+                    <a asp-action="ChangePassword" class="nav-item">
+                        <i class="fa-solid fa-shield-halved"></i> Đổi mật khẩu
+                    </a>
+                </nav>
+
+                <form asp-action="Logout" method="post">
+                    <button class="btn-logout-gl">Đăng xuất</button>
+                </form>
+            </aside>
+
+            <!-- MAIN -->
+            <section>
+                <div class="content-header">
+                    <h2>Thông tin tài khoản</h2>
+                    <div class="subtext">Cập nhật thông tin cá nhân để GiftLab phục vụ bạn tốt hơn ✨</div>
+                </div>
+
+                <form asp-action="UpdateProfile" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <!-- Hidden bắt buộc để update đúng customer -->
+                    <input type="hidden" asp-for="CustomerID" />
+                    <input type="hidden" asp-for="Avatar" />
+                    <input type="hidden" asp-for="Active" />
+
+                    <div class="form-grid">
+                        <div class="card-section">
+                            <div class="section-title">
+                                <i class="fa-solid fa-id-card"></i> Cá nhân
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="gl-label">Họ và tên</div>
+                                <input asp-for="FullName" class="gl-input" />
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="gl-label">Email</div>
+                                <input asp-for="Email" class="gl-input" />
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="gl-label">Số điện thoại</div>
+                                <input asp-for="Phone" class="gl-input" />
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="gl-label">Ngày sinh</div>
+                                <input asp-for="Birthday" type="date" class="gl-input" />
+                            </div>
+                        </div>
+
+                        <div class="card-section">
+                            <div class="section-title">
+                                <i class="fa-solid fa-location-dot"></i> Địa chỉ
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="gl-label">Địa chỉ</div>
+                                <input asp-for="Address" class="gl-input" />
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="gl-label">Tỉnh / Thành</div>
+                                <input asp-for="LocationID" class="gl-input" />
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="gl-label">Quận / Huyện</div>
+                                <input asp-for="District" class="gl-input" />
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="gl-label">Phường / Xã</div>
+                                <input asp-for="Ward" class="gl-input" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ACTION -->
+                    <div class="actions-row">
+                        <button type="submit" class="btn-gl-fill">
+                            <i class="fa-solid fa-floppy-disk"></i> Cập nhật thông tin
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+        </div>
+    </div>
+</div>

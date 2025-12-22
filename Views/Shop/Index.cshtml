@@ -1,0 +1,97 @@
+﻿@model GiftLab.ViewModels.ShopIndexViewModel
+
+@{
+    ViewData["Title"] = "Cửa hàng";
+}
+
+<link rel="stylesheet" href="~/css/shop.css" />
+
+<section class="gl-shop">
+    <div class="gl-shop-layout">
+
+        <form method="get" asp-action="Index">
+            <input type="hidden" name="q" value="@Model.SearchQuery" />
+            <aside class="gl-filter">
+                <h3 class="gl-filter-title">Danh mục sản phẩm</h3>
+
+                @foreach (var cat in Model.Categories)
+                {
+                    <label class="gl-check">
+                        <input type="checkbox"
+                               name="catIds"
+                               value="@cat.Id"
+                        @(Model.SelectedCategoryIds.Contains(cat.Id) ? "checked" : "") />
+                        <span class="gl-box"></span>
+                        <span class="gl-check-text">@cat.Name</span>
+                    </label>
+                }
+
+                <hr class="gl-filter-line" />
+
+                <h3 class="gl-filter-title">Giá sản phẩm</h3>
+
+                <input class="gl-range"
+                       type="range"
+                       min="0"
+                       max="200000"
+                       step="1000"
+                       name="maxPrice"
+                       value="@Model.MaxPrice"
+                       oninput="priceVal.innerText = this.value.replace(/\B(?=(\d{3})+(?!\d))/g,'.') + ' đ'" />
+
+                <div class="gl-price-value">
+                    Giá: <span id="priceVal">@Model.MaxPrice.ToString("N0") đ</span>
+                </div>
+
+                <button type="submit" class="gl-filter-btn">Lọc sản phẩm</button>
+            </aside>
+        </form>
+
+
+        <div class="gl-shop-main">
+            <h1 class="gl-shop-title">Cửa hàng</h1>
+            @if (!string.IsNullOrWhiteSpace(Model.SearchQuery))
+            {
+                <div class="text-muted mb-3">
+                    Kết quả cho: <strong>@Model.SearchQuery</strong>
+                </div>
+            }
+
+            <div class="gl-shop-grid">
+                @foreach (var p in Model.Products)
+                {
+                @await Html.PartialAsync("_ProductCard", p)
+                }
+            </div>
+
+            @if (Model.TotalPages > 1)
+            {
+                <div class="gl-shop-paging">
+                    <a class="gl-page-btn @(Model.Page <= 1 ? " is-disabled" : "")"
+                       asp-controller="Shop"
+                       asp-action="Index"
+                       asp-route-page="@(Model.Page - 1)"
+                       asp-route-q="@Model.SearchQuery"
+                       asp-route-maxPrice="@Model.MaxPrice"
+                       asp-route-catIds="@Model.SelectedCategoryIds">
+                        ‹ Trước
+                    </a>
+
+                    <span class="gl-page-info">Trang @Model.Page / @Model.TotalPages</span>
+
+                    <a class="gl-page-btn @(Model.Page >= Model.TotalPages ? " is-disabled" : "")"
+                       asp-controller="Shop"
+                       asp-action="Index"
+                       asp-route-page="@(Model.Page + 1)"
+                       asp-route-q="@Model.SearchQuery"
+                       asp-route-maxPrice="@Model.MaxPrice"
+                       asp-route-catIds="@Model.SelectedCategoryIds">
+                        Sau ›
+                    </a>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</section>

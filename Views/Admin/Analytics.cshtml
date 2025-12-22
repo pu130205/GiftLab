@@ -1,0 +1,144 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Analytics";
+}
+
+<div class="container-fluid p-4 p-lg-5">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Phân tích</h1>
+            <p class="text-muted mb-0">Phân tích dữ liệu và thống kê chi tiết.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary" 
+                    data-bs-toggle="tooltip" 
+                    title="Xuất dữ liệu">
+                <i class="bi bi-download icon-hover"></i>
+            </button>
+            <button type="button" class="btn btn-outline-secondary" 
+                    data-bs-toggle="tooltip" 
+                    title="Cài đặt">
+                <i class="bi bi-gear icon-hover"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Analytics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-lg-6">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="stats-icon bg-primary bg-opacity-10 text-primary">
+                                <i class="bi bi-eye"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0 text-muted">Lượt xem trang</h6>
+                            <h3 class="mb-0">45,231</h3>
+                            <small class="text-success">
+                                <i class="bi bi-arrow-up"></i> +12.5%
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="stats-icon bg-success bg-opacity-10 text-success">
+                                <i class="bi bi-people"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0 text-muted">Khách truy cập</h6>
+                            <h3 class="mb-0">12,543</h3>
+                            <small class="text-success">
+                                <i class="bi bi-arrow-up"></i> +8.2%
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="stats-icon bg-warning bg-opacity-10 text-warning">
+                                <i class="bi bi-clock-history"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0 text-muted">Thời gian trung bình</h6>
+                            <h3 class="mb-0">3m 24s</h3>
+                            <small class="text-danger">
+                                <i class="bi bi-arrow-down"></i> -2.1%
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="stats-icon bg-info bg-opacity-10 text-info">
+                                <i class="bi bi-graph-up-arrow"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0 text-muted">Tỷ lệ thoát</h6>
+                            <h3 class="mb-0">42.3%</h3>
+                            <small class="text-success">
+                                <i class="bi bi-arrow-up"></i> +5.4%
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Tổng quan lưu lượng</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="trafficChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Nguồn lưu lượng</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="trafficSourceChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+    <script src="~/admin/js/analytics.js" asp-append-version="true"></script>
+}
+

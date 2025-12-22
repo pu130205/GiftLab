@@ -1,0 +1,1787 @@
+﻿html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.gl-container {
+    flex: 1; /* đẩy footer xuống đáy */
+}
+
+.gl-footer {
+    flex-shrink: 0;
+}
+
+/* ================== FONT (Noto Sans local) ================== */
+
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('/fonts/NotoSans-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'MeowScript';
+    src: url('/fonts/MeowScript-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Cigra Free Demo';
+    src: url('/fonts/Cigra Free Demo.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gulfs Display';
+    src: url('/fonts/Gulfs Display Normal.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('/fonts/NotoSans-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* ================== RESET CƠ BẢN ================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Noto Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #222;
+    background: #fff;
+}
+
+a {
+    color: inherit;
+}
+#scrollToTopBtn {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 999;
+    width: 30px;
+    height: 30px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+    box-shadow: 0 4px 8px rgba(251, 111, 146, 0.3);
+    transition: background-color 0.3s, opacity 0.3s;
+    /* Căn giữa hình ảnh */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+    /* Định kiểu cho hình ảnh bên trong nút */
+    #scrollToTopBtn img {
+        width: 100%; 
+        height: 100%;
+    }
+
+/* ================== HEADER WRAPPER ================== */
+
+.gl-header {
+    font-family: 'Noto Sans', sans-serif;
+}
+
+/* ================== TOP BAR SLIDER NGANG ================== */
+
+.gl-top-bar {
+    background: #ffd4de;
+    color: #d70025;
+    height: 40px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700; /* in đậm */
+}
+
+/* 3 slide ngang, tổng 300% chiều rộng */
+.gl-slider-horizontal {
+    display: flex;
+    width: 300%;
+    animation: slideHorizontal 9s ease-in-out infinite; /* 3 slide x 5s */
+}
+
+/* hover -> đứng yên */
+.gl-top-bar:hover .gl-slider-horizontal {
+    animation-play-state: paused;
+}
+
+/* mỗi slide chiếm full width của khung top bar */
+.gl-slide {
+    flex: 0 0 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* 1 vòng 15s, mỗi slide hiển thị ~5s, trượt luôn về phía trước */
+@keyframes slideHorizontal {
+    /* Slide 1 hiện */
+    0% {
+        transform: translateX(0);
+    }
+
+    30% {
+        transform: translateX(0);
+    }
+    /* Trượt sang slide 2 */
+    33% {
+        transform: translateX(-100%);
+    }
+    /* Slide 2 hiện */
+    63% {
+        transform: translateX(-100%);
+    }
+    /* Trượt sang slide 3 */
+    66% {
+        transform: translateX(-200%);
+    }
+    /* Slide 3 hiện */
+    96% {
+        transform: translateX(-200%);
+    }
+    /* Nhảy về slide 1 để lặp tiếp */
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* ================== MAIN HEADER (LOGO + ICON) ================== */
+.gl-main-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100px;
+    justify-content: space-between;
+    padding: 15px 100px;
+    background: #ffffff;
+}
+
+.gl-main-icons {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+.gl-main-icons-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+
+.gl-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    display: block;
+    transition: transform .2s ease, filter .2s ease;
+}
+
+.gl-icon:hover {
+        transform: translateY(-3px) scale(1.1);
+        filter: brightness(1.0);
+    }
+
+.gl-logo-wrapper {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gl-logo {
+    width: 222px;
+    height: 90px;
+    object-fit: contain;
+    display: block;
+    padding: 0;
+}
+
+
+/* ================== NAV MENU ================== */
+
+.gl-nav {
+    background: #ffe5ec; /* màu nền */
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gl-nav-list {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+    .gl-nav-list a {
+        text-decoration: none;
+        color: #d70025 ;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+        .gl-nav-list a:hover {
+            color: #ff507b;
+        }
+
+        /* MENU ACTIVE */
+        .gl-nav-list a.active {
+            color: #ff507b; /* cùng tone hover cho đồng bộ */
+            font-weight: 800; /* nổi hơn chút */
+        }
+
+
+/* ================== CONTAINER NỘI DUNG ================== */
+
+.gl-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 10px;
+}
+/* ================== FOOTER ================== */
+
+.gl-footer {
+    background: #fff5f8;
+    border-top: 5px solid #fb6f92;
+    padding: 40px 16px; /* hạ chiều cao */
+}
+
+.gl-footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+}
+
+/* Cột footer */
+.gl-footer-col h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #d70025;
+    margin-bottom: 12px;
+}
+
+.gl-footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+    .gl-footer-col ul li {
+        margin-bottom: 10px;
+    }
+
+        .gl-footer-col ul li a,
+        .gl-footer-contact li {
+            font-size: 16px;
+            color: #d70025;
+            text-decoration: none;
+        }
+
+            .gl-footer-col ul li a:hover {
+                color: #ff507b;
+            }
+
+/* Logo */
+.gl-footer-logo {
+    width: 380px;
+    height: auto;
+}
+
+/* Bản quyền dưới logo */
+.gl-footer-copy {
+    font-size: 14px;
+    color: #d70025;
+    margin-top: 10px;
+    opacity: 0.8;
+}
+
+/* Cột logo thẳng hàng */
+.logo-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* ================== RESPONSIVE ================== */
+
+@media (max-width: 768px) {
+    .gl-main-header {
+        padding: 10px 16px;
+    }
+
+    .gl-logo {
+        width: 200px;
+        height: auto;
+    }
+
+    .gl-nav-list {
+        gap: 20px;
+    }
+
+        .gl-nav-list a {
+            font-size: 14px;
+        }
+}
+/* ================== FOOTER RESPONSIVE ================== */
+
+@media (max-width: 768px) {
+
+    .gl-footer {
+        height: auto; /* cho cao linh hoạt khi xếp dọc */
+        padding: 40px 0;
+    }
+
+    .gl-footer-container {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 30px;
+    }
+
+    .logo-col {
+        align-items: center;
+    }
+
+    .gl-footer-logo {
+        width: 200px; /* logo co nhỏ */
+        height: auto;
+    }
+
+    .gl-footer-copy {
+        font-size: 13px;
+        margin-top: 6px;
+    }
+
+    .gl-footer-col h3 {
+        font-size: 18px; /* giảm nhẹ */
+    }
+
+    .gl-footer-col ul li a,
+    .gl-footer-contact li {
+        font-size: 15px;
+    }
+}
+
+/* ================== HERO / INTRO TRANG CHỦ ================== */
+
+.gl-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 0;
+    gap: 20px;
+}
+
+/* Tăng width phần chữ bên trái */
+.gl-hero-text {
+    flex: 0 0 55%;
+    max-width: 55%;
+}
+
+.gl-hero-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #ff8fab;
+    margin-bottom: 16px;
+}
+
+.gl-hero-desc {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 28px;
+}
+
+.gl-hero-highlight {
+    font-weight: 700;
+    font-style: italic;
+}
+
+/* Buttons */
+.gl-hero-actions {
+    display: flex;
+    gap: 16px;
+}
+
+.gl-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 32px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.gl-btn-primary {
+    background-color: #ff8fab; /* Mua ngay */
+    color: #ffffff;
+}
+
+.gl-btn-secondary {
+    background-color: #ffe5ec; /* Xem thêm */
+    color: #d70025;
+}
+
+.gl-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(251, 111, 146, 0.3);
+    transform: translateY(-1px);
+}
+
+/* Hình bên phải sát mép phải */
+.gl-hero-image {
+    flex: 0 0 55%;
+    max-width: 55%;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 10px; /* sát viền phải */
+}
+
+    .gl-hero-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+/* ================== FADE-IN LEFT / RIGHT ANIMATION ================== */
+
+.fade-in-left {
+    opacity: 0;
+    transform: translateX(-30px);
+    animation: fadeInLeft 0.9s ease-out forwards;
+    animation-delay: 0.1s;
+}
+
+.fade-in-right {
+    opacity: 0;
+    transform: translateX(30px);
+    animation: fadeInRight 0.9s ease-out forwards;
+    animation-delay: 0.2s;
+}
+
+@keyframes fadeInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    0% {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ================== RESPONSIVE HERO ================== */
+
+@media (max-width: 900px) {
+    .gl-hero {
+        flex-direction: column-reverse;
+        text-align: center;
+    }
+
+    .gl-hero-text {
+        max-width: 100%;
+        flex: none;
+    }
+
+    .gl-hero-actions {
+        justify-content: center;
+    }
+
+    .gl-hero-image {
+        justify-content: center;
+        padding-right: 0;
+        max-width: 80%;
+    }
+
+    .gl-hero-title {
+        font-size: 36px;
+    }
+}
+/* ================== FEATURE SCROLL SECTION ================== */
+
+.gl-feature-bar {
+    width: 100vw; /* full width tuyệt đối */
+    height: 130px;
+    background-color: #fff6fb;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 0; /* xóa padding */
+    margin: 0; /* xóa margin */
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw; /* trick để phá container */
+    margin-right: -50vw; /* đảm bảo full width */
+}
+
+.gl-feature-track {
+    display: flex;
+    gap: 20px; /* khoảng cách icon */
+    animation: scrollLoop 18s linear infinite;
+}
+
+.gl-feature-item img {
+    height: 80px;
+    width: auto;
+    object-fit: contain;
+    user-select: none;
+    pointer-events: none;
+    opacity: 0.95;
+    transition: transform 0.2s ease;
+}
+
+    /* Hiệu ứng hover icon phóng nhẹ */
+    .gl-feature-item img:hover {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+
+/* Animation chạy ngang */
+@keyframes scrollLoop {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* ================== DANH MỤC SẢN PHẨM ================== */
+
+.gl-category {
+    padding: 60px 0 40px;
+}
+
+.gl-category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+
+.gl-category-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #fb6f92;
+}
+
+/* Button "Xem cửa hàng" */
+.gl-category-link {
+    padding: 10px 26px;
+    border-radius: 999px;
+    border: 2px solid #fb6f92;
+    color: #fb6f92;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+    .gl-category-link:hover {
+        background-color: #fb6f92;
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+/* Grid 4 danh mục */
+.gl-category-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+}
+
+/* Card bao quanh hình – để hover trên <a> */
+.gl-category-card {
+    display: block;
+    border-radius: 18px;
+    overflow: hidden;
+    transition: transform 0.25s ease;
+}
+
+    .gl-category-card img {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: transform 0.25s ease;
+    }
+
+    /* Hover: chỉ zoom, không shadow */
+    .gl-category-card:hover {
+        transform: scale(1.06);
+    }
+
+/* ========== ANIMATION: scroll tới mới chạy ========== */
+
+/* trạng thái ban đầu: ẩn + lệch */
+.cat-animate-left {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+
+.cat-animate-up {
+    opacity: 0;
+    transform: translateY(25px);
+}
+
+/* khi được JS gắn visible thì mới animate */
+.cat-visible-left {
+    animation: fadeInLeft 0.8s ease-out forwards;
+}
+
+.cat-visible-up {
+    animation: fadeInUpSoft 0.8s ease-out forwards;
+}
+
+/* Stagger delay cho từng item */
+.gl-category-item:nth-child(1).cat-visible-up {
+    animation-delay: 0.05s;
+}
+
+.gl-category-item:nth-child(2).cat-visible-up {
+    animation-delay: 0.15s;
+}
+
+.gl-category-item:nth-child(3).cat-visible-up {
+    animation-delay: 0.25s;
+}
+
+.gl-category-item:nth-child(4).cat-visible-up {
+    animation-delay: 0.35s;
+}
+
+@keyframes fadeInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInUpSoft {
+    0% {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .gl-category-list {
+        grid-template-columns: repeat(2, 1fr);
+        row-gap: 24px;
+    }
+
+    .gl-category-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .gl-category-link {
+        align-self: flex-start;
+    }
+}
+
+@media (max-width: 600px) {
+    .gl-category-list {
+        grid-template-columns: 1fr;
+    }
+
+    .gl-category-header {
+        align-items: center;
+    }
+
+    .gl-category-link {
+        align-self: center;
+    }
+}
+
+/* =============== NEWEST ARRIVAL =============== */
+
+.gl-arrival {
+    width: 100vw; /* tràn theo chiều ngang màn hình */
+    margin-left: calc(50% - 50vw); /* thoát khỏi container ngoài */
+    padding: 50px 70px; 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* HÌNH BÊN TRÁI */
+.gl-arrival-image {
+    flex: 0 0 55%;
+    max-width: 55%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+    .gl-arrival-image img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 20px;
+    }
+
+/* TEXT BÊN PHẢI */
+.gl-arrival-text {
+    flex: 0 0 45%;
+    max-width: 45%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center;
+    gap: 20px;
+}
+
+.arrival-newest {
+    font-family: "MeowScript", sans-serif; 
+    font-size: 70px;
+    color: #d70025;
+    margin: 0;
+}
+
+.arrival-title {
+    font-family: "Gulfs Display", sans-serif;
+    font-size: 70px;
+    font-weight: 800;
+    color: #ff8ea8;
+    margin-top: -30px;
+    letter-spacing: 3px;
+}
+
+.gl-arrival-btn {
+    padding: 12px 40px;
+    font-size: 16px;
+    border-radius: 999px;
+}
+
+@media (max-width: 900px) {
+    .gl-arrival {
+        flex-direction: column;
+        text-align: center;
+        margin-left: 0;
+        width: 100%; 
+        padding: 40px 16px;
+    }
+
+    .gl-arrival-image,
+    .gl-arrival-text {
+        max-width: 100%;
+        flex: none;
+    }
+}
+
+/* ========== ARRIVAL FADE-IN (scroll tới mới chạy) ========== */
+
+.arr-animate-left {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+
+.arr-animate-right {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+.arr-visible-left {
+    animation: fadeInLeft 0.8s ease-out forwards;
+}
+
+.arr-visible-right {
+    animation: fadeInRight 0.8s ease-out forwards;
+}
+
+/*---COLLECTION---*/
+.collection-slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 10px auto;
+    padding: 40px 0 40px;
+}
+
+/* khung nhìn */
+.col-window {
+    overflow: hidden;
+    width: 100%;
+    height: 300px;
+}
+
+/* dải slide */
+.col-track {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+/* mỗi slide – 4 tấm / 1 khung */
+.col-slide {
+    flex: 0 0 25%;
+    padding: 12px 12px;
+    box-sizing: border-box;
+}
+
+    /* ảnh */
+    .col-slide img {
+        width: 100%;
+        display: block;
+        border-radius: 20px;
+        transition: transform 0.25s ease;
+    }
+
+    /* hover nổi toàn tấm hình */
+    .col-slide:hover img {
+        transform: scale(1.05);
+    }
+
+/* nút điều hướng */
+.col-nav {
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    color: #d70025;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .col-nav:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    }
+
+.col-prev {
+    margin-right: 4px;
+}
+
+.col-next {
+    margin-left: 4px;
+}
+
+/* responsive đơn giản: mobile chỉ hiển thị 2 tấm */
+@media (max-width: 768px) {
+    .col-slide {
+        flex: 0 0 50%;
+    }
+}
+
+/* ================== SECTION WRAPPER ================== */
+
+.gl-best {
+    margin-top: 20px;
+}
+
+/* Header: title + "Xem cửa hàng" */
+.gl-best-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 20px;
+    margin-right: 10px;
+    margin-bottom: 18px;
+}
+
+.gl-best-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #fb6f92;
+}
+
+/* Button "Xem cửa hàng →" kiểu pill outline */
+.gl-best-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 30px;
+    border-radius: 999px;
+    border: 2px solid #fb6f92;
+    color: #fb6f92;
+    background: transparent;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+    .gl-best-link:hover {
+        background: #fb6f92;
+        color: #fff;
+        box-shadow: 0 6px 16px rgba(251, 111, 146, 0.4);
+    }
+
+/* ================== SLIDER LAYOUT ================== */
+
+.gl-best-slider {
+    position: relative;
+    padding: 20px 60px 60px 60px; /* chừa chỗ hai bên cho arrow */
+}
+
+.gl-best-viewport {
+    overflow: hidden;
+    padding: 20px 0 40px 0;
+    width: 100%;
+}
+
+.gl-best-track {
+    display: flex;
+    gap: 20px;
+    transition: transform .45s ease;
+}
+
+/* ================== ARROWS ================== */
+
+.gl-best-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 30px;
+    color: #fb6f92;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: 0.2s;
+}
+
+    .gl-best-arrow:hover {
+        transform: translateY(-50%) scale(1.05);
+        background: #fb6f92;
+        color: #fff;
+    }
+
+.gl-best-prev {
+    left: 0;
+}
+
+.gl-best-next {
+    right: 0;
+}
+
+/* ================== PRODUCT CARD ================== */
+
+.bs-card {
+    width: 230px; /* khung info + image */
+    cursor: pointer;
+    border-radius: 16px;
+    border: 1px solid #ffd4de;
+    background: #fff;
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+
+    .bs-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(251, 111, 146, 0.3);
+        border-color: #ffd4de;
+    }
+
+
+/* ================== IMAGE AREA ================== */
+
+.bs-image {
+    width: 230px;
+    height: 230px;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+}
+
+    .bs-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+/* Badge giảm giá */
+
+.bs-sale-badge {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 80px;
+    height: 30px;
+    background: #d33a54;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+}
+/* Container chứa các icon: Định vị tuyệt đối trong bs-image */
+.bs-hover-icons {
+    position: absolute;
+    top: 10px;
+    right: 10px; /* Đặt ở góc phải */
+    display: flex;
+    flex-direction: column;
+    gap: 8px; 
+    z-index: 10;
+    opacity: 0;
+    transition: opacity .2s ease, transform .3s ease;
+    transform: translateX(10px); /* Kéo nhẹ sang phải để tạo hiệu ứng trượt */
+}
+
+/* Hiển thị icons khi hover card */
+.bs-card:hover .bs-hover-icons {
+    opacity: 1;
+    transform: translateX(0); /* Đưa về vị trí ban đầu */
+}
+
+/* Định kiểu cho nút icon */
+.bs-icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform .2s ease, background-color .2s ease, color .2s ease;
+    padding: 0; /* Đảm bảo hình ảnh fit hoàn hảo */
+}
+
+    .bs-icon-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    /* Xử lý hình ảnh icon bên trong nút button */
+    .bs-icon-btn img {
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+        filter: invert(0%); /* Mặc định */
+        transition: filter .2s ease;
+    }
+
+    /* Màu sắc và hiệu ứng cho icon Trái tim (Yêu thích) */
+    .bs-icon-btn.heart {
+        background-color: #fff;
+    }
+
+        .bs-icon-btn.heart:hover {
+            background-color: #fb6f92; /* Nền hồng khi hover */
+        }
+
+            .bs-icon-btn.heart:hover img {
+                /* Chuyển icon sang màu trắng khi hover (áp dụng nếu icon gốc là màu đen) */
+                filter: brightness(0) invert(1);
+            }
+
+    /* Màu sắc và hiệu ứng cho icon Giỏ hàng */
+    .bs-icon-btn.cart {
+        background-color: #fb6f92;
+    }
+
+        .bs-icon-btn.cart:hover {
+            background-color: #d33a54; /* Nền đỏ đậm hơn khi hover */
+        }
+
+/* ================== TEXT INFO ================== */
+
+.bs-info {
+    margin-top: 8px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.bs-info-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Danh mục sản phẩm */
+.bs-category {
+    font-size: 10px;
+    color: #ff8fab;
+}
+
+/* Số sao */
+.bs-rating {
+    font-size: 13px;
+    color: #ffb907;
+}
+
+/* Tên sản phẩm – 1 dòng, dài thì ... */
+.bs-name {
+    font-size: 14px;
+    color: #4e4e4e;
+    font-weight: 600;
+    margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Giá */
+.bs-price {
+    margin-top: 6px;
+}
+
+.bs-current {
+    font-size: 13px;
+    font-weight: bold;
+    color: #735151;
+}
+
+/* Giá gốc nếu có giảm giá */
+.bs-old {
+    font-size: 10px;
+    font-weight: bold;
+    color: #b4b4b4;
+    margin-left: 6px;
+    text-decoration: line-through;
+}
+
+/* ===== BÁNH NGỌT SECTION ===== */
+
+.gl-cake {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px 0;
+    gap: 20px;
+}
+
+.gl-cake-text {
+    flex: 0 0 55%;
+    max-width: 55%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    gap: 20px;
+}
+
+.cake-title-line {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 15px; /* khoảng cách giữa 2 chữ */
+}
+
+.cake-title-main {
+    font-family: "Gulfs Display", sans-serif;
+    font-size: 75px;
+    font-weight: 700;
+    color: #bb6767;
+    line-height: 1;
+    letter-spacing: 3px;
+}
+
+.cake-title-sub {
+    font-family: "MeowScript", sans-serif;
+    font-size: 70px;
+    font-weight: 600;
+    color: #735151;
+    line-height: 1;
+}
+
+.cake-desc {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 480px;
+    color: #4e4e4e;
+}
+
+/* Button MUA NGAY */
+.gl-btn-cake {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 40px;
+    border-radius: 999px;
+    border: none;
+    background: #f5d4d4; /* nền */
+    color: #735151; /* chữ */
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color .2s ease, color .2s ease, box-shadow .2s ease, transform .15s ease;
+}
+
+    .gl-btn-cake:hover {
+        box-shadow: 0 8px 18px rgba(241, 223, 223, 1);
+        transform: translateY(-2px);
+    }
+
+/* Hình bên phải */
+.gl-cake-image {
+    flex: 0 0 60%;
+    max-width: 60%;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 90px; /* sát viền phải */
+}
+
+    .gl-cake-image img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
+
+/* =======================
+   FADE EFFECT
+   ======================= */
+.fade-in-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: 0.8s ease;
+}
+
+.fade-in-right {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: 0.8s ease;
+}
+
+.fade-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+@media (max-width: 900px) {
+    .gl-cake {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .gl-cake-text,
+    .gl-cake-image {
+        max-width: 100%;
+        flex: none;
+        padding: 0;
+    }
+
+    .gl-cake-image {
+        margin-top: 20px;
+    }
+}
+
+/* =========================
+   TẠI SAO NÊN CHỌN GIFTLAB
+   ========================= */
+
+.gl-why-section {
+    width: 100vw; 
+    margin-left: 50%;
+    transform: translateX(-50%); 
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 0; 
+    background: url('/images/giatricotloi.png') center/cover no-repeat;
+    overflow: hidden; 
+}
+
+.gl-why-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 0; 
+}
+
+.gl-why-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #ff6995;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+/* ===== GRID 3 CỘT FULL-WIDTH ===== */
+
+.gl-why-grid {
+    width: 100%;
+    padding: 0 60px; /* khoảng cách 2 bên, vẫn full màn hình */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px 34px;
+}
+
+/* ===== CARD CƠ BẢN ===== */
+
+.gl-why-item {
+    background: rgba(255, 255, 255, 0.88);
+    border-radius: 22px;
+    padding: 25px 25px;
+    border: 1px solid rgba(255, 150, 180, 0.45);
+    text-align: left;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    overflow: visible;
+}
+
+.gl-why-heading {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ff4f8b;
+    margin-bottom: 8px;
+}
+
+.gl-why-text {
+    font-size: 16px;
+    color: #5c3e4e;
+    line-height: 1.55;
+}
+
+/* ===== FADE-IN CƠ BẢN ===== */
+
+.fade-why {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity .6s ease, transform .6s ease;
+}
+
+    .fade-why.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+/* Delay theo thứ tự m muốn */
+.why-1 {
+    transition-delay: 0.00s;
+}
+
+.why-2 {
+    transition-delay: 0.12s;
+}
+
+.why-3 {
+    transition-delay: 0.24s;
+}
+
+.why-4 {
+    transition-delay: 0.36s;
+}
+
+.why-5 {
+    transition-delay: 0.48s;
+}
+
+.why-6 {
+    transition-delay: 0.60s;
+}
+
+/* ===== HOVER: ZOOM + NỔI LÊN ===== */
+/* Đặt SAU fade-why.visible để override transform */
+
+.gl-why-item:hover {
+    transform: scale(1.05) translateY(-10px);
+    box-shadow: 0 18px 40px rgba(255, 120, 160, 0.32);
+    background: rgba(255, 255, 255, 0.97);
+    z-index: 3;
+    transition-delay: 0s;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1024px) {
+    .gl-why-grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 0 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .gl-why-title {
+        font-size: 26px;
+        margin-bottom: 22px;
+    }
+
+    .gl-why-grid {
+        grid-template-columns: 1fr;
+        padding: 0 20px;
+    }
+}
+
+/* ===== TEXT MARQUEE ===== */
+.gl-text-marquee {
+    width: 100vw;
+    height: 50px;
+    background: #ffd4de;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 0; 
+    margin-top: 40px; 
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw; 
+    margin-right: -50vw; 
+}
+
+.gl-text-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-text 15s linear infinite;
+}
+
+    .gl-text-track span {
+        font-family: 'Cigra Free Demo', sans-serif;
+        white-space: nowrap;
+        font-size: 18px;
+        font-weight: 500;
+        color: #e84b6a;
+        margin-right: 40px;
+        letter-spacing: 0.5px;
+    }
+
+/* Animation chạy ngang */
+@keyframes marquee-text {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.gl-text-marquee:hover .gl-text-track {
+    animation-play-state: paused;
+}
+
+.gl-review {
+    padding: 60px 0;
+}
+
+.gl-review-title {
+    text-align: center;
+    font-size: 34px;
+    font-weight: 800;
+    color: #ff8fab;
+    margin-bottom: 28px;
+}
+
+.gl-review-inner {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 72px; /* chừa chỗ cho 2 nút */
+}
+
+.gl-review-viewport {
+    overflow: hidden;
+    padding: 40px 0 40px 0;
+}
+
+.gl-review-track {
+    display: flex;
+    gap: 28px;
+    transition: transform .5s ease;
+    will-change: transform;
+}
+
+.gl-review-card {
+    flex: 0 0 360px;
+    border: 1px solid #e6e6e6;
+    border-radius: 20px;
+    background: #fff;
+    padding: 26px 28px;
+    text-align: center;
+    /* thêm */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    will-change: transform;
+}
+
+    /* HOVER */
+    .gl-review-card:hover {
+        transform: translateY(-10px) scale(1.03);
+        box-shadow: 0 16px 40px rgba(251, 111, 146, 0.3);
+    }
+
+.gl-review-stars {
+    color: #ffde59;
+    font-size: 20px;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+}
+
+.gl-review-text {
+    color: #d33a54;
+    line-height: 1.6;
+    margin: 0 0 18px;
+}
+
+.gl-review-name {
+    color: #d33a54;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+/* NÚT */
+.gl-review-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(0,0,0,.12);
+    cursor: pointer;
+    font-size: 22px;
+    color: #fb6f92;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10; /* <- để khỏi bị card/viewport che */
+}
+
+.gl-review-prev {
+    left: 18px;
+}
+
+.gl-review-next {
+    right: 18px;
+}
+
+.gl-review-btn:hover {
+    background: #fb6f92;
+    color: #fff;
+}
+
+/* ================== RESPONSIVE: marquee + review ================== */
+@media (max-width: 768px) {
+
+    /* ===== TEXT MARQUEE ===== */
+    .gl-text-marquee {
+        padding: 10px 0;
+    }
+
+    .gl-text-track {
+        gap: 24px; /* khoảng cách chữ nhỏ lại */
+        animation-duration: 16s; /* chạy nhanh hơn chút cho vừa màn */
+    }
+
+        .gl-text-track span {
+            font-size: 16px;
+            padding: 0 6px;
+            white-space: nowrap;
+        }
+
+    /* ===== REVIEW SLIDER ===== */
+    .gl-review {
+        padding: 40px 16px;
+    }
+
+    .gl-review-title {
+        font-size: 28px;
+        line-height: 1.2;
+        padding: 0 8px;
+    }
+
+    .gl-review-inner {
+        position: relative;
+        padding: 0 44px; /* chừa chỗ cho 2 nút */
+    }
+
+    .gl-review-viewport {
+        overflow: hidden;
+    }
+
+    .gl-review-track {
+        gap: 16px;
+    }
+
+    .gl-review-card {
+        flex: 0 0 82vw; /* card to theo màn */
+        max-width: 420px;
+        padding: 22px 18px;
+    }
+
+        .gl-review-card .stars {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .gl-review-card p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .gl-review-card .name {
+            font-size: 16px;
+            margin-top: 12px;
+        }
+
+    /* nút điều hướng */
+    .gl-review-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+    }
+
+        .gl-review-btn.prev {
+            left: 6px;
+        }
+
+        .gl-review-btn.next {
+            right: 6px;
+        }
+}
+
+/* Mobile nhỏ hơn nữa */
+@media (max-width: 480px) {
+    .gl-text-track span {
+        font-size: 14px;
+    }
+
+    .gl-review-title {
+        font-size: 24px;
+    }
+
+    .gl-review-card {
+        flex: 0 0 88vw;
+    }
+}
+
+/* ===== Search inline on header ===== */
+.gl-search-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid #ffd1dc;
+    background: #fff; /* nền trắng */
+}
+
+    .gl-search-inline:focus-within {
+        border-color: #ff8fab;
+        box-shadow: 0 0 0 3px rgba(255, 143, 171, 0.22);
+    }
+
+.gl-search-inline-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gl-search-inline-icon-img {
+    width: 18px;
+    height: 18px;
+    opacity: 0.85;
+}
+
+.gl-search-inline-input {
+    border: 0;
+    outline: none;
+    background: transparent;
+    width: 140px; 
+    max-width: 22vw;
+    font-size: 14px;
+    color: #333;
+}
+
+.gl-search-inline-clear {
+    border: 0;
+    background: transparent;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0 6px;
+    cursor: pointer;
+    color: #ff8fab;
+    opacity: 0.9;
+}
+
+    .gl-search-inline-clear:hover {
+        opacity: 1;
+    }
+
+    /* Ẩn nút X khi input rỗng */
+    .gl-search-inline-clear.is-hidden {
+        display: none;
+    }
+
+

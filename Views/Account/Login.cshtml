@@ -1,0 +1,350 @@
+﻿@model GiftLab.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+    Layout = null;
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+    .auth-container {
+        font-family: 'Quicksand', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #fff6fa;
+        padding: 20px;
+    }
+
+    .auth-card {
+        display: flex;
+        width: 1300px;
+        height: 680px;
+        max-width: 100%;
+        background: white;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(255, 111, 168, 0.15);
+    }
+
+    /* === CỘT TRÁI === */
+    .auth-image-side {
+        width: 50%;
+        height: 100%;
+        background-color: #ffeef5;
+        position: relative;
+        overflow: hidden;
+    }
+
+        /* Ảnh nền */
+        .auth-image-side img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.6s ease;
+        }
+
+        .auth-image-side:hover img {
+            transform: scale(1.03);
+        }
+
+    /* === CỘT PHẢI === */
+    .auth-form-side {
+        width: 40%;
+        height: 100%;
+        padding: 0 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* Tiêu đề */
+    .auth-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .auth-title {
+        font-size: 36px;
+        font-weight: 700;
+        color: #f16480;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .auth-subtitle {
+        color: #666;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    /* Input */
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 700;
+        color: #444;
+        font-size: 15px;
+    }
+
+    .form-control-custom {
+        width: 100%;
+        padding: 16px 20px;
+        border: 2px solid #f0f0f0;
+        border-radius: 12px;
+        background: #fcfcfc;
+        font-size: 15px;
+        outline: none;
+        transition: 0.3s;
+        box-sizing: border-box;
+        font-family: 'Quicksand', sans-serif;
+    }
+
+        .form-control-custom:focus {
+            border-color: #f16480;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255, 111, 168, 0.1);
+        }
+
+    /* Checkbox & Quên pass */
+    .auth-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 35px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+        .remember-me input {
+            width: 16px;
+            height: 16px;
+            accent-color: #f16480;
+            cursor: pointer;
+        }
+
+    .forgot-link {
+        color: #f16480;
+        font-weight: 700;
+        text-decoration: none;
+        transition: 0.2s;
+    }
+
+        .forgot-link:hover {
+            color: #f16480;
+            text-decoration: underline;
+        }
+
+    /* Nút bấm chính */
+    .btn-submit {
+        width: 100%;
+        padding: 18px;
+        background: #f16480;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 8px 20px rgba(255, 111, 168, 0.25);
+        font-family: 'Quicksand', sans-serif;
+        text-transform: uppercase;
+    }
+
+        .btn-submit:hover {
+            background: #f16480;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 111, 168, 0.35);
+        }
+
+    /* Footer */
+    .auth-footer {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 15px;
+        color: #666;
+    }
+
+    .register-link {
+        color: #f16480;
+        font-weight: 700;
+        text-decoration: none;
+        margin-left: 5px;
+    }
+
+        .register-link:hover {
+            text-decoration: underline;
+        }
+
+    /* Responsive mobile */
+    @@media (max-width: 992px) {
+        .auth-card {
+            flex-direction: column;
+            width: 100%;
+            height: auto;
+        }
+
+        .auth-image-side {
+            width: 100%;
+            height: 250px;
+            flex: none;
+        }
+
+        .auth-form-side {
+            width: 100%;
+            height: auto;
+            padding: 40px 20px;
+            flex: none;
+        }
+    }
+
+    /* ===== Social Login Buttons ===== */
+    .social-login {
+        margin-top: 14px;
+        display: grid;
+        grid-template-columns: 1fr; /* 1 cột */
+        gap: 12px;
+    }
+
+    /* (BỔ SUNG) Bạn đang thiếu style gốc của btn-social nên nút có thể bị “trần”.
+           Thêm lại để nút Google giữ đúng giao diện ban đầu, KHÔNG đổi bố cục. */
+    .btn-social {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 800;
+        text-decoration: none;
+        border: 2px solid #f0f0f0;
+        background: #fff;
+        color: #444;
+        transition: 0.25s;
+        box-shadow: 0 8px 18px rgba(0,0,0,0.04);
+        width: 100%;
+        cursor: pointer;
+        font-family: 'Quicksand', sans-serif;
+    }
+
+        .btn-social:hover {
+            transform: translateY(-2px);
+            border-color: #f16480;
+            box-shadow: 0 10px 22px rgba(255, 111, 168, 0.18);
+        }
+
+    .social-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .auth-error {
+        margin-top: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: #fff5f8;
+        color: #7a3b47;
+        font-weight: 700;
+        font-size: 14px;
+        border: 1px solid rgba(241, 100, 128, 0.18);
+    }
+
+    @@media (max-width: 520px) {
+        .social-login {
+            grid-template-columns: 1fr;
+        }
+    }
+
+</style>
+
+<div class="auth-container">
+    <div class="auth-card">
+
+        <div class="auth-image-side">
+            <img src="~/images/login-bg.png" alt="Catput Login Banner">
+        </div>
+
+        <div class="auth-form-side">
+
+            <div class="auth-header">
+                <h2 class="auth-title">Đăng nhập</h2>
+                <p class="auth-subtitle">Chào mừng bạn quay trở lại với GiftLab! 🌸</p>
+            </div>
+
+            <!-- FORM LOGIN THƯỜNG -->
+            <form asp-action="Login" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label">Địa chỉ Email</label>
+                    <input asp-for="Email" class="form-control-custom" placeholder="name@example.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password" class="form-label">Mật khẩu</label>
+                    <input asp-for="Password" type="password" class="form-control-custom" placeholder="••••••••" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="auth-options">
+                    <label class="remember-me">
+                        <input asp-for="RememberMe" type="checkbox" />
+                        <span>Ghi nhớ đăng nhập</span>
+                    </label>
+                    <a asp-controller="Account" asp-action="ForgotPassword" class="forgot-link">Quên mật khẩu?</a>
+                </div>
+
+                <button type="submit" class="btn-submit">Đăng nhập</button>
+
+                @if (TempData["AuthError"] != null)
+                {
+                    <div class="auth-error">@TempData["AuthError"]</div>
+                }
+            </form>
+
+            <!-- FORM GOOGLE (đặt ngoài form login để tránh nested form) -->
+            <div class="social-login">
+                <form asp-controller="Account" asp-action="ExternalLogin" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="provider" value="Google" />
+                    <button type="submit" class="btn-social btn-google">
+                        <svg class="social-icon" viewBox="0 0 48 48" aria-hidden="true">
+                            <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303C33.776 32.91 29.31 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z" />
+                            <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.654 16.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4c-7.682 0-14.381 4.327-17.694 10.691z" />
+                            <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.197l-6.191-5.238C29.211 35.091 26.715 36 24 36c-5.289 0-9.741-3.066-11.283-7.49l-6.522 5.025C9.469 39.556 16.227 44 24 44z" />
+                            <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.05 12.05 0 0 1-4.087 5.565l.003-.002 6.191 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z" />
+                        </svg>
+                        Đăng nhập bằng Google
+                    </button>
+                </form>
+            </div>
+
+            <div class="auth-footer">
+                Chưa là thành viên?
+                <a asp-controller="Account" asp-action="Register" class="register-link">Đăng ký ngay</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

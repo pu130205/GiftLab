@@ -1,0 +1,295 @@
+@model GiftLab.ViewModels.OrderDetailPageVM
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Chi tiết đơn hàng";
+}
+@{
+    string ImgSrc(string? thumb)
+    {
+        if (string.IsNullOrWhiteSpace(thumb)) return Url.Content("~/images/default.png");
+        thumb = thumb.Trim();
+
+        if (thumb.StartsWith("http", StringComparison.OrdinalIgnoreCase)) return thumb;
+        if (thumb.StartsWith("~/")) return Url.Content(thumb);
+        if (thumb.StartsWith("/")) return thumb;
+
+        return "/" + thumb.TrimStart('/');
+    }
+}
+
+<style>
+    :root {
+        --gl-pink: #ed708a;
+        --gl-pink-light: #fff0f3;
+        --gl-text: #333;
+        --gl-muted: #777;
+        --gl-border: #eee;
+        --gl-bg: #f8f9fa;
+    }
+
+    .od-wrap {
+        padding: 60px 0;
+        min-height: 100vh;
+    }
+
+    .od-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 16px;
+    }
+
+    .od-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+    }
+
+    .od-title {
+        font-weight: 900;
+        color: var(--gl-text);
+        margin: 0;
+        font-size: 28px;
+    }
+
+    .od-back {
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 12px;
+        padding: 10px 16px;
+        text-decoration: none;
+        color: var(--gl-muted);
+        font-weight: 700;
+        background: #fff;
+    }
+
+    .od-grid {
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        gap: 18px;
+        align-items: start;
+    }
+
+    .od-card {
+        background: #fff;
+        border: 1px solid var(--gl-border);
+        border-radius: 18px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.04);
+        overflow: hidden;
+    }
+
+    .od-card-head {
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(0,0,0,.06);
+        font-weight: 900;
+        color: var(--gl-text);
+        background: #fff;
+    }
+
+    .od-card-body {
+        padding: 14px 16px;
+    }
+
+    .od-badge {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 800;
+        font-size: 12px;
+        color: #fff;
+        background: #6c757d;
+    }
+
+        .od-badge.success {
+            background: #198754;
+        }
+
+        .od-badge.info {
+            background: #0dcaf0;
+            color: #053a45;
+        }
+
+        .od-badge.warn {
+            background: #ffc107;
+            color: #3a2d00;
+        }
+
+        .od-badge.primary {
+            background: #0d6efd;
+        }
+
+    .od-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 1px dashed rgba(0,0,0,.07);
+        color: var(--gl-text);
+        font-size: 14px;
+    }
+
+        .od-row:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .od-row b {
+            font-weight: 900;
+        }
+
+    .od-item {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(0,0,0,.06);
+    }
+
+        .od-item:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+    .od-thumb {
+        width: 64px;
+        height: 64px;
+        border-radius: 14px;
+        object-fit: cover;
+        border: 1px solid rgba(0,0,0,.08);
+        flex: 0 0 auto;
+        background: #fff;
+    }
+
+    .od-item-mid {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .od-item-name {
+        font-weight: 900;
+        margin: 0;
+        color: var(--gl-text);
+    }
+
+    .od-item-sub {
+        font-size: 12px;
+        color: var(--gl-muted);
+    }
+
+    .od-item-price {
+        font-weight: 900;
+        white-space: nowrap;
+        color: #ED708A;
+    }
+
+    .od-total {
+        margin-top: 10px;
+        border-top: 1px solid rgba(0,0,0,.08);
+        padding-top: 10px;
+        font-size: 15px;
+        color: #ED708A;
+    }
+
+    @@media (max-width: 992px) {
+        .od-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="od-wrap">
+    <div class="od-container">
+
+        <div class="od-header">
+            <h2 class="od-title">Chi tiết đơn hàng #@Model.OrderId</h2>
+            <a asp-controller="Account" asp-action="OrderHistory" class="od-back">← Quay lại</a>
+        </div>
+
+        <div class="od-grid">
+
+            <!-- LEFT -->
+            <div>
+                <div class="od-card mb-3">
+                    <div class="od-card-head">Trạng thái đơn hàng</div>
+                    <div class="od-card-body">
+                        @{
+                            var s = (Model.StatusText ?? "").ToLower();
+                            var cls = "od-badge";
+                            if (s.Contains("hoàn") || s.Contains("thành")) cls += " success";
+                            else if (s.Contains("giao") || s.Contains("ship")) cls += " info";
+                            else if (s.Contains("chờ") || s.Contains("pending")) cls += " warn";
+                            else cls += " primary";
+                        }
+                        <div class="@cls">@Model.StatusText</div>
+                        <div class="mt-2" style="color:var(--gl-muted); font-size:13px;">
+                            Ngày đặt: <b>@(Model.OrderDate.HasValue? Model.OrderDate.Value.ToString("dd/MM/yyyy HH:mm") : "")</b>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="od-card">
+                    <div class="od-card-head">Sản phẩm trong đơn</div>
+                    <div class="od-card-body">
+                        @if (Model.Items == null || Model.Items.Count == 0)
+                        {
+                            <div class="text-muted">Không có sản phẩm.</div>
+                        }
+                        else
+                        {
+                            foreach (var it in Model.Items)
+                            {
+                                <div class="od-item">
+                                    <img class="od-thumb"
+                                         src="@ImgSrc(it.Thumb)"
+                                         onerror="this.onerror=null;this.src='@Url.Content("~/images/default.png")';" />
+                                    <div class="od-item-mid">
+                                        <p class="od-item-name">@it.ProductName</p>
+                                        <div class="od-item-sub">
+                                            SL: <b>@it.Quantity</b> • Đơn giá: <b>@string.Format("{0:N0} đ", it.UnitPrice)</b>
+                                        </div>
+                                    </div>
+                                    <div class="od-item-price">@string.Format("{0:N0} đ", it.LineTotal)</div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT -->
+            <div>
+                <div class="od-card mb-3">
+                    <div class="od-card-head">Thông tin đơn hàng</div>
+                    <div class="od-card-body">
+                        <div class="od-row"><span>Mã đơn</span><b>#@Model.OrderId</b></div>
+                        <div class="od-row"><span>Ngày đặt</span><b>@(Model.OrderDate.HasValue? Model.OrderDate.Value.ToString("dd/MM/yyyy") : "")</b></div>
+                        <div class="od-row"><span>Trạng thái</span><b>@Model.StatusText</b></div>
+                    </div>
+                </div>
+
+                <div class="od-card mb-3">
+                    <div class="od-card-head">Tổng thanh toán</div>
+                    <div class="od-card-body">
+                        <div class="od-row"><span>Tạm tính</span><b>@string.Format("{0:N0} đ", Model.Subtotal)</b></div>
+                        <div class="od-row"><span>Phí vận chuyển</span><b>@string.Format("{0:N0} đ", Model.ShippingFee)</b></div>
+                        <div class="od-total">
+                            <div class="od-row" style="border-bottom:0;">
+                                <span><b>Tổng cộng</b></span>
+                                <b style="color:var(--gl-pink); font-size:16px;">@string.Format("{0:N0} đ", Model.Total)</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="od-card">
+                    <div class="od-card-head">Thông tin nhận hàng</div>
+                    <div class="od-card-body">
+                        <div style="font-weight:900;">@Model.ReceiverName</div>
+                        <div style="color:var(--gl-muted); font-size:13px;">@Model.ReceiverPhone</div>
+                        <div style="color:var(--gl-muted); font-size:13px;">@Model.ReceiverAddress</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

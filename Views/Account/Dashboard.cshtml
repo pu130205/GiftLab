@@ -1,0 +1,200 @@
+﻿@using System.Security.Claims
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Tài khoản";
+
+    var fullName = User.FindFirst("Fullname")?.Value
+                   ?? User.FindFirst(ClaimTypes.Name)?.Value
+                   ?? "";
+
+    var email = User.FindFirst(ClaimTypes.Email)?.Value ?? "";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+    :root {
+        --gl-pink: #ed708a;
+        --gl-pink-light: #fff0f3;
+        --gl-text: #333;
+        --gl-muted: #888;
+        --gl-border: #eee;
+    }
+
+    .acc-wrapper {
+        padding: 60px 0;
+        min-height: 100vh;
+    }
+
+    .acc-card {
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(251, 111, 146, 0.3);
+        max-width: 1200px;
+        margin: auto;
+        padding: 50px;
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 60px;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .acc-sidebar {
+        text-align: center;
+        border-right: 1px solid var(--gl-border);
+        padding-right: 30px;
+    }
+
+    .avatar-circle {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: #f0f0f0;
+        margin: 0 auto 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        color: #ccc;
+    }
+
+    .user-name {
+        font-weight: 800;
+        font-size: 20px;
+        margin: 0;
+    }
+
+    .user-email {
+        font-size: 14px;
+        color: var(--gl-muted);
+        margin-bottom: 30px;
+    }
+
+    .nav-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 18px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 600;
+        color: var(--gl-text);
+        transition: .25s;
+    }
+
+        .nav-item:hover,
+        .nav-item.active-gl {
+            background: var(--gl-pink-light);
+            color: var(--gl-pink);
+        }
+
+    .btn-logout {
+        margin-top: 40px;
+        width: 100%;
+        padding: 14px;
+        border-radius: 14px;
+        border: none;
+        background: var(--gl-pink);
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(251, 111, 146, 0.3);
+            transform: translateY(-1px);
+        }
+
+    /* ===== MAIN ===== */
+    .acc-main {
+        min-width: 0;
+    }
+
+    .hello-box {
+        background: linear-gradient(180deg, #fff0f3 0%, #ffffff 60%);
+        border-radius: 24px;
+        padding: 40px 42px;
+        border: 1px solid rgba(237,112,138,.25);
+        min-height: 420px;
+    }
+
+        .hello-box h1 {
+            font-weight: 900;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .hello-box p {
+            color: var(--gl-muted);
+            font-size: 16px;
+            max-width: 520px;
+        }
+
+    @@media (max-width: 992px) {
+        .acc-card {
+            grid-template-columns: 1fr;
+            padding: 30px;
+        }
+
+        .acc-sidebar {
+            border-right: none;
+            border-bottom: 1px solid var(--gl-border);
+            padding-bottom: 30px;
+        }
+    }
+
+    .hello-title {
+        text-align: center;
+    }
+
+</style>
+
+<div class="acc-wrapper">
+    <div class="container">
+        <div class="acc-card">
+
+            <!-- SIDEBAR -->
+            <aside class="acc-sidebar">
+                <div class="avatar-circle">
+                    <i class="fa-solid fa-circle-user"></i>
+                </div>
+
+                <p class="user-name">@fullName</p>
+                <p class="user-email">@email</p>
+
+                <nav class="nav-menu">
+                    <a asp-controller="Account" asp-action="Profile" class="nav-item">
+                        <i class="fa-regular fa-user"></i> Thông tin tài khoản
+                    </a>
+
+                    <a asp-controller="Account" asp-action="OrderHistory" class="nav-item">
+                        <i class="fa-regular fa-rectangle-list"></i> Lịch sử đơn hàng
+                    </a>
+
+                    <a asp-controller="Account" asp-action="ChangePassword" class="nav-item">
+                        <i class="fa-solid fa-shield-halved"></i> Đổi mật khẩu
+                    </a>
+                </nav>
+
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    <button class="btn-logout">Đăng xuất</button>
+                </form>
+            </aside>
+
+            <!-- MAIN -->
+            <section class="acc-main">
+                <div class="hello-box">
+                    <h1>Xin chào, @fullName 👋</h1>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</div>

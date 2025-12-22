@@ -1,0 +1,128 @@
+﻿@model GiftLab.Models.CartViewModel
+@{
+    ViewData["Title"] = "Giỏ hàng";
+}
+
+<div class="container" style="max-width:1200px; margin: 24px auto;">
+    <div style="display:grid; grid-template-columns: 1fr 360px; gap:24px; align-items:start;">
+        <!-- LEFT: table -->
+        <div>
+            <div style="display:grid; grid-template-columns: 1fr 140px 140px 140px; font-weight:600; color:#666; margin-bottom:12px;">
+                <div>SẢN PHẨM</div>
+                <div style="text-align:center;">GIÁ</div>
+                <div style="text-align:center;">SỐ LƯỢNG</div>
+                <div style="text-align:center;">TẠM TÍNH</div>
+            </div>
+
+            <hr style="border:none; border-top:1px solid rgba(0,0,0,0.08); margin:0 0 6px;" />
+
+            @if (!Model.Items.Any())
+            {
+                <div style="padding:24px; background:#fff; border-radius:12px; border:1px solid #eee;">
+                    Giỏ hàng đang trống.
+                </div>
+            }
+            else
+            {
+                foreach (var item in Model.Items)
+                {
+                    <div style="display:grid; grid-template-columns: 1fr 140px 140px 140px; align-items:center; padding:16px 0;">
+                        <div style="display:flex; align-items:center; gap:14px;">
+                            <form asp-action="Remove" method="post" style="margin:0;">
+                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                <input type="hidden" name="variantId" value="@item.VariantId" />
+                                <button type="submit" style="width:28px; height:28px; border-radius:999px; border:1px solid #eee; background:#fff; cursor:pointer;">×</button>
+                            </form>
+
+                            <img src="@Url.Content(string.IsNullOrWhiteSpace(item.ImagePath) ? "~/images/default.png" : item.ImagePath)"
+                                 alt="@item.Name"
+                                 style="width:72px; height:72px; object-fit:cover; border-radius:12px; border:1px solid #eee;"
+                                 onerror="this.onerror=null;this.src='@Url.Content("~/images/default.png")';" />
+
+                            <div style="min-width:0;">
+                                <div style="font-weight:600; line-height:1.2;">@item.Name</div>
+                            </div>
+                        </div>
+
+                        <div style="text-align:center; white-space:nowrap;">
+                            @string.Format("{0:N0} đ", item.UnitPrice)
+                        </div>
+
+                        <div style="display:flex; justify-content:center;">
+                            <div style="display:flex; align-items:center; border:1px solid #eee; border-radius:12px; width:130px; overflow:hidden; background:#fff;">
+                                <form asp-action="Update" method="post" style="margin:0;">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <input type="hidden" name="variantId" value="@item.VariantId" />
+                                    <input type="hidden" name="quantity" value="@(item.Quantity - 1)" />
+                                    <button type="submit" style="width:44px; height:38px; border:none; background:#fff; cursor:pointer; font-size:18px; line-height:1;">-</button>
+                                </form>
+
+                                <div style="flex:1; text-align:center; font-weight:600;">@item.Quantity</div>
+
+                                <form asp-action="Update" method="post" style="margin:0;">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <input type="hidden" name="variantId" value="@item.VariantId" />
+                                    <input type="hidden" name="quantity" value="@(item.Quantity + 1)" />
+                                    <button type="submit" style="width:44px; height:38px; border:none; background:#fff; cursor:pointer; font-size:18px; line-height:1;">+</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div style="font-weight:600; text-align:center; white-space:nowrap;">
+                            @string.Format("{0:N0} đ", item.LineTotal)
+                        </div>
+                    </div>
+
+                    <hr style="border:none; border-top:1px solid rgba(0,0,0,0.08); margin:0;" />
+                }
+
+                <a href="/Shop"
+                   style="display:block; width:fit-content; margin:10px auto 0;
+                  padding:10px 14px; border:1px solid #eee; border-radius:999px; text-decoration:none;">
+                    ← TIẾP TỤC XEM SẢN PHẨM
+                </a>
+
+            }
+        </div>
+
+        <!-- RIGHT: summary -->
+        <div style="background:#fdeff4; border-radius:16px; padding:18px; border:1px solid rgba(0,0,0,0.04);">
+            <div style="font-weight:700; font-size:18px; margin-bottom:12px; text-align:center;">
+                TỔNG CỘNG GIỎ HÀNG
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin:10px 0;">
+                <div style="color:#333;">Tạm tính</div>
+                <div style="font-weight:600; white-space:nowrap;">@string.Format("{0:N0} đ", Model.Subtotal)</div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin:10px 0;">
+                <div style="color:#333;">Vận chuyển</div>
+                <div style="font-weight:600; white-space:nowrap;">@string.Format("{0:N0} đ", Model.ShippingFee)</div>
+            </div>
+
+            <hr style="border:none; border-top:1px solid rgba(0,0,0,0.08); margin:12px 0;" />
+
+            <div style="display:flex; justify-content:space-between; margin:14px 0; font-weight:800; color:#fb6f92; font-size:16px;">
+                <div>Tổng</div>
+                <div style="white-space:nowrap;">@string.Format("{0:N0} đ", Model.GrandTotal)</div>
+            </div>
+            <a asp-area=""
+               asp-controller="Checkout"
+               asp-action="Index"
+               style="display:block; width:100%; height:46px; line-height:46px; text-align:center;
+          border:none; border-radius:14px; background:#fb6f92; color:#fff;
+          font-weight:700; text-decoration:none; margin-top:12px;">
+                TIẾN HÀNH THANH TOÁN
+            </a>
+
+            <div style="margin-top:18px;">
+                <div style="font-weight:600; margin-bottom:8px; text-align:center;">Mã ưu đãi</div>
+                <input placeholder="Nhập mã giảm giá" style="width:100%; height:42px; border:1px solid #eee; border-radius:12px; padding:0 12px; background:#fff;" />
+                <button style="width:100%; height:42px; border:1px solid #eee; border-radius:12px; background:#fff; cursor:pointer; margin-top:10px; font-weight:600;">
+                    Áp dụng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

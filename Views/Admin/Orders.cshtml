@@ -1,0 +1,567 @@
+@using GiftLab.Models.Admin
+@model List<AdminOrderViewModel>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Orders";
+    Func<decimal?, string> fmtVnd = (v) => (v ?? 0).ToString("N0") + " ₫";
+
+    Func<string?, string> statusBadgeClass = (s) =>
+    {
+        var x = (s ?? "").Trim().ToLower();
+
+        if (x == "pending") return "bg-warning text-dark";
+        if (x == "cancelled" || x == "canceled") return "bg-secondary text-white";
+        if (x == "processing") return "bg-primary text-white";
+        if (x == "shipped") return "bg-info text-dark";
+        if (x == "completed") return "bg-success text-white";
+
+        return "bg-light text-dark";
+    };
+}
+
+<div class="container-fluid p-4 p-lg-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Đơn hàng</h1>
+            <p class="text-muted mb-0">Quản lý đơn hàng và giao dịch.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a class="btn btn-outline-secondary"
+               title="Xuất dữ liệu"
+               href="@Url.Action("Export", "AdminOrders", new {
+                area = "Admin",
+                keyword = ViewBag.CurrentFilter?.keyword,
+                statusId = ViewBag.CurrentFilter?.statusId,
+                fromDate = ViewBag.CurrentFilter?.fromDate,
+                toDate = ViewBag.CurrentFilter?.toDate,
+                minTotal = ViewBag.CurrentFilter?.minTotal,
+                maxTotal = ViewBag.CurrentFilter?.maxTotal
+            })">
+
+                <i class="bi bi-download icon-hover"></i>
+            </a>
+            <button type="button" class="btn btn-outline-secondary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#filterOrderModal"
+                    title="Lọc">
+                <i class="bi bi-funnel icon-hover"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-lg-6">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="stats-icon bg-primary bg-opacity-10 text-primary">
+                                <i class="bi bi-bag-check"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0 text-muted">Tổng đơn hàng</h6>
+                            <h3 class="mb-0">@(((int?)ViewBag.KpiTotalOrders ?? 0).ToString("N0"))</h3>
+                            <small class="text-success">
+                                <i class="bi bi-arrow-up"></i> +12.5%
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="stats-icon bg-success bg-opacity-10 text-success">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0 text-muted">Hoàn thành</h6>
+                            <h3 class="mb-0">@(((int?)ViewBag.KpiCompletedOrders ?? 0).ToString("N0"))</h3>
+                            <small class="text-success">
+                                <i class="bi bi-arrow-up"></i> +8.2%
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="stats-icon bg-warning bg-opacity-10 text-warning">
+                                <i class="bi bi-clock-history"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0 text-muted">Đang chờ</h6>
+                            <h3 class="mb-0">@(((int?)ViewBag.KpiPendingOrders ?? 0).ToString("N0"))</h3>
+                            <small class="text-danger">
+                                <i class="bi bi-arrow-down"></i> -2.1%
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="stats-icon bg-info bg-opacity-10 text-info">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0 text-muted">Doanh thu</h6>
+                            <h3 class="mb-0">@fmtVnd((decimal?)ViewBag.KpiRevenue)</h3>
+                            <small class="text-success">
+                                <i class="bi bi-arrow-up"></i> +5.4%
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="card-title mb-0">Đơn hàng gần đây</h5>
+
+            @{
+                const int STATUS_PENDING = 1;
+                const int STATUS_COMPLETED = 4;
+
+                var f = ViewBag.CurrentFilter;
+                string currentKeyword = (string?)f?.keyword ?? "";
+            }
+
+            <div class="d-flex align-items-center gap-2 ms-auto">
+                <!-- Search -->
+                <form method="get"
+                      action="@Url.Action("Index", "AdminOrders", new { area = "Admin" })"
+                      class="d-flex align-items-center gap-2">
+
+                    <!-- giữ filter hiện tại khi search -->
+                    <input type="hidden" name="statusId" value="@(f?.statusId ?? "")" />
+                    <input type="hidden" name="fromDate" value="@(f?.fromDate ?? "")" />
+                    <input type="hidden" name="toDate" value="@(f?.toDate ?? "")" />
+                    <input type="hidden" name="minTotal" value="@(f?.minTotal ?? "")" />
+                    <input type="hidden" name="maxTotal" value="@(f?.maxTotal ?? "")" />
+                    <input type="hidden" name="page" value="1" />
+
+                    <div class="input-group input-group-sm" style="width: 320px; max-width: 70vw;">
+                        <span class="input-group-text bg-white">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text"
+                               class="form-control"
+                               name="keyword"
+                               value="@currentKeyword"
+                               placeholder="Tìm kiếm..."
+                               autocomplete="off" />
+                        @if (!string.IsNullOrWhiteSpace(currentKeyword))
+                        {
+                            <a class="btn btn-outline-secondary"
+                               title="Xóa tìm kiếm"
+                               href="@Url.Action("Index", "AdminOrders", new {
+                            area = "Admin",
+                            statusId = f?.statusId,
+                            fromDate = f?.fromDate,
+                            toDate = f?.toDate,
+                            minTotal = f?.minTotal,
+                            maxTotal = f?.maxTotal,
+                            page = 1
+                       })">
+                                <i class="bi bi-x-lg"></i>
+                            </a>
+                        }
+                    </div>
+                </form>
+
+                <!-- Quick status filter -->
+                <div class="btn-group btn-group-sm" role="group" id="quickStatusFilter">
+                    <button type="button"
+                            class="btn btn-outline-primary js-quick-filter"
+                            data-status-id="">
+                        Tất cả
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-outline-primary js-quick-filter"
+                            data-status-id="@STATUS_PENDING">
+                        Đang chờ
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-outline-primary js-quick-filter"
+                            data-status-id="@STATUS_COMPLETED">
+                        Hoàn thành
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Khách hàng</th>
+                            <th>Sản phẩm</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var o in Model)
+                            {
+                                <tr data-order-id="@o.OrderID">
+                                    <td><strong>#@o.OrderID</strong></td>
+                                    <td>@o.CustomerName</td>
+                                    <td>@o.TotalItems sản phẩm</td>
+                                    <td>@o.TotalAmount.ToString("N0") ₫</td>
+                                        <td>
+                                            <span class="badge rounded-pill px-3 py-2 order-status @statusBadgeClass(o.Status)">
+                                                @o.Status
+                                            </span>
+
+                                        </td>
+                                        <td>@o.OrderDate?.ToString("yyyy-MM-dd")</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-info view-order"
+                                                data-id="@o.OrderID"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#viewOrderModal">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-primary change-status"
+                                                data-id="@o.OrderID"
+                                                data-status="@o.Status"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#changeStatusModal">
+                                            <i class="bi bi-arrow-repeat"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    Chưa có đơn hàng nào.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @{
+                int currentPage = ViewBag.CurrentPage ?? 1;
+                int totalPages = ViewBag.TotalPages ?? 1;
+
+                // giữ filter hiện tại khi bấm trang
+                var pf = ViewBag.CurrentFilter;
+            }
+
+            @if (totalPages > 1)
+            {
+                <nav aria-label="Page navigation" class="mt-3">
+                    <ul class="pagination justify-content-center">
+
+                        <!-- Trước -->
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <a class="page-link"
+                               href="@Url.Action("Index", "AdminOrders", new {
+                                   area = "Admin",
+                                   page = currentPage - 1,
+                                   keyword = pf?.keyword,
+                                   statusId = pf?.statusId,
+                                   fromDate = pf?.fromDate,
+                                   toDate = f?.toDate,
+                                   minTotal = f?.minTotal,
+                                   maxTotal = f?.maxTotal
+                               })"
+                            >
+                                Trước
+                            </a>
+                        </li>
+
+                        <!-- Số trang -->
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a class="page-link"
+                                   href="@Url.Action("Index", "AdminOrders", new {
+                           area = "Admin",
+                           page = i,
+                           keyword = pf?.keyword,
+                           statusId = pf?.statusId,
+                           fromDate = pf?.fromDate,
+                           toDate = f?.toDate,
+                           minTotal = f?.minTotal,
+                           maxTotal = f?.maxTotal
+                       })">
+                                    @i
+                                </a>
+                            </li>
+                        }
+
+                        <!-- Sau -->
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <a class="page-link"
+                               href="@Url.Action("Index", "AdminOrders", new {
+                       area = "Admin",
+                       page = currentPage + 1,
+                       keyword = pf?.keyword,
+                       statusId = pf?.statusId,
+                       fromDate = pf?.fromDate,
+                       toDate = f?.toDate,
+                       minTotal = f?.minTotal,
+                       maxTotal = f?.maxTotal
+                   })">
+                                Sau
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+            }
+
+        </div>
+    </div>
+</div>
+
+<!-- View Order Modal -->
+<div class="modal fade" id="viewOrderModal" tabindex="-1" aria-labelledby="viewOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewOrderModalLabel">
+                    <i class="bi bi-receipt me-2"></i>Chi tiết đơn hàng #<span id="viewOrderId"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-3">Thông tin khách hàng</h6>
+                        <table class="table table-borderless">
+                            <tr>
+                                <td class="text-muted" style="width: 40%;">Tên:</td>
+                                <td><strong id="viewOrderCustomer"></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Email:</td>
+                                <td><span id="viewOrderEmail"></span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Số điện thoại:</td>
+                                <td><span id="viewOrderPhone"></span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Địa chỉ:</td>
+                                <td><span id="viewOrderAddress"></span></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-3">Thông tin đơn hàng</h6>
+                        <table class="table table-borderless">
+                            <tr>
+                                <td class="text-muted" style="width: 40%;">Mã đơn:</td>
+                                <td><strong id="viewOrderId2"></strong></td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Ngày đặt:</td>
+                                <td id="viewOrderDate"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Trạng thái:</td>
+                                <td id="viewOrderStatus"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Phương thức thanh toán:</td>
+                                <td>Thanh toán khi nhận hàng</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <h6 class="text-muted mb-3">Sản phẩm trong đơn</h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody id="viewOrderItems"></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Tạm tính:</strong></td>
+                                <td><strong id="viewOrderSubtotal"></strong></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Phí vận chuyển:</strong></td>
+                                <td><strong id="viewOrderShipping"></strong></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Tổng cộng:</strong></td>
+                                <td><strong class="text-primary" id="viewOrderTotal"></strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-outline-primary">
+                    <i class="bi bi-printer me-2"></i>In hóa đơn
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Status Modal -->
+<div class="modal fade" id="changeStatusModal" tabindex="-1" aria-labelledby="changeStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changeStatusModalLabel">
+                    <i class="bi bi-arrow-repeat me-2"></i>Thay đổi trạng thái đơn hàng
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="changeStatusOrderId">
+
+                <div class="mb-3">
+                    <label for="currentStatusDisplay" class="form-label">Trạng thái hiện tại</label>
+                    <input type="text" class="form-control" id="currentStatusDisplay" readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label for="newStatus" class="form-label">Trạng thái mới <span class="text-danger">*</span></label>
+                    @{
+                        var statuses = ViewBag.Statuses as IEnumerable<dynamic>;
+                    }
+                    <select class="form-select" id="newStatus" required>
+                        <option value="">Chọn trạng thái...</option>
+                        @if (statuses != null)
+                        {
+                            foreach (var s in statuses)
+                            {
+                                <option value="@s.Id">@s.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="statusNote" class="form-label">Ghi chú</label>
+                    <textarea class="form-control" id="statusNote" rows="3" placeholder="Thêm ghi chú về việc thay đổi trạng thái..."></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="changeStatusBtn">Cập nhật trạng thái</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Order Modal -->
+<div class="modal fade" id="filterOrderModal" tabindex="-1" aria-labelledby="filterOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="filterOrderModalLabel">
+                    <i class="bi bi-funnel me-2"></i>Lọc đơn hàng
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="filterOrderStatus" class="form-label">Trạng thái</label>
+                    @{
+                        var filterStatuses = ViewBag.Statuses as IEnumerable<dynamic>;
+                    }
+
+                    <select class="form-select" id="filterOrderStatus">
+                        <option value="">Tất cả</option>
+                        @if (filterStatuses != null)
+                        {
+                            foreach (var s in filterStatuses)
+                            {
+                                <option value="@s.Id">@s.Name</option>
+                            }
+                        }
+                    </select>
+
+
+                </div>
+                <div class="mb-3">
+                    <label for="filterOrderDateFrom" class="form-label">Từ ngày</label>
+                    <input type="date" class="form-control" id="filterOrderDateFrom">
+                </div>
+                <div class="mb-3">
+                    <label for="filterOrderDateTo" class="form-label">Đến ngày</label>
+                    <input type="date" class="form-control" id="filterOrderDateTo">
+                </div>
+                <div class="mb-3">
+                    <label for="filterOrderAmountFrom" class="form-label">Từ số tiền (₫)</label>
+                    <input type="number" class="form-control" id="filterOrderAmountFrom" min="0" step="10000">
+                </div>
+                <div class="mb-3">
+                    <label for="filterOrderAmountTo" class="form-label">Đến số tiền (₫)</label>
+                    <input type="number" class="form-control" id="filterOrderAmountTo" min="0" step="10000">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" id="clearOrderFiltersBtn">Xóa bộ lọc</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="applyOrderFiltersBtn">Áp dụng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.ADMIN_ORDER_DETAIL_URL = '@Url.Action("Detail", "AdminOrders", new { area = "Admin" })';
+    window.ADMIN_ORDER_UPDATE_STATUS_URL = '@Url.Action("UpdateStatus", "AdminOrders", new { area = "Admin" })';
+    window.ADMIN_ORDER_STATUS_LIST_URL = '@Url.Action("StatusList", "AdminOrders", new { area = "Admin" })';
+</script>
+
+@section Scripts {
+    <script src="~/admin/js/orders.js" asp-append-version="true"></script>
+}

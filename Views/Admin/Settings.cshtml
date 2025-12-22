@@ -1,0 +1,156 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Settings";
+}
+
+<div class="container-fluid p-4 p-lg-5">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Cài đặt</h1>
+            <p class="text-muted mb-0">Cài đặt hệ thống và tùy chọn.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-primary">
+                <i class="bi bi-save me-2"></i>
+                Lưu thay đổi
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- General Settings -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Cài đặt chung</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="siteName" class="form-label">Tên trang web</label>
+                        <input type="text" class="form-control" id="siteName" value="GiftLab">
+                    </div>
+                    <div class="mb-3">
+                        <label for="siteEmail" class="form-label">Email trang web</label>
+                        <input type="email" class="form-control" id="siteEmail" value="giftlab.store@gmail.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="sitePhone" class="form-label">Số điện thoại</label>
+                        <input type="tel" class="form-control" id="sitePhone" value="+84 916 367 385">
+                    </div>
+                    <div class="mb-3">
+                        <label for="timezone" class="form-label">Múi giờ</label>
+                        <select class="form-select" id="timezone">
+                            <option value="Asia/Ho_Chi_Minh" selected>Asia/Ho_Chi_Minh (GMT+7)</option>
+                            <option value="UTC">UTC</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Settings -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Cài đặt thông báo</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                        <label class="form-check-label" for="emailNotifications">
+                            Thông báo Email
+                        </label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="smsNotifications">
+                        <label class="form-check-label" for="smsNotifications">
+                            Thông báo SMS
+                        </label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="pushNotifications" checked>
+                        <label class="form-check-label" for="pushNotifications">
+                            Thông báo đẩy
+                        </label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="orderNotifications" checked>
+                        <label class="form-check-label" for="orderNotifications">
+                            Thông báo đơn hàng mới
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Cài đặt bảo mật</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="sessionTimeout" class="form-label">Thời gian hết phiên (phút)</label>
+                        <input type="number" class="form-control" id="sessionTimeout" value="30" min="5" max="120">
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="twoFactorAuth">
+                        <label class="form-check-label" for="twoFactorAuth">
+                            Bật xác thực hai yếu tố
+                        </label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="passwordExpiry" checked>
+                        <label class="form-check-label" for="passwordExpiry">
+                            Yêu cầu đổi mật khẩu mỗi 90 ngày
+                        </label>
+                    </div>
+                    <button type="button" class="btn btn-outline-danger">
+                        <i class="bi bi-shield-exclamation me-2"></i>
+                        Đổi mật khẩu
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appearance Settings -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Giao diện</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="theme" class="form-label">Giao diện</label>
+                        <select class="form-select" id="theme">
+                            <option value="light" selected>Sáng</option>
+                            <option value="dark">Tối</option>
+                            <option value="auto">Tự động (Hệ thống)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="language" class="form-label">Ngôn ngữ</label>
+                        <select class="form-select" id="language">
+                            <option value="vi" selected>Tiếng Việt</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dateFormat" class="form-label">Định dạng ngày</label>
+                        <select class="form-select" id="dateFormat">
+                            <option value="dd/MM/yyyy" selected>DD/MM/YYYY</option>
+                            <option value="MM/dd/yyyy">MM/DD/YYYY</option>
+                            <option value="yyyy-MM-dd">YYYY-MM-DD</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/admin/js/settings.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,276 @@
+﻿@model GiftLab.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Đăng ký tài khoản";
+    Layout = null;
+
+    // Khởi tạo danh sách Giới tính an toàn
+    var gendersList = new List<SelectListItem>
+    {
+    new SelectListItem { Value = "Nu", Text = "Nữ" },
+    new SelectListItem { Value = "Nam", Text = "Nam" },
+    new SelectListItem { Value = "Khac", Text = "Khác" }
+    };
+
+    var genderSelectList = new SelectList(gendersList, "Value", "Text");
+    }
+
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+    /* === TỔNG THỂ === */
+    .auth-container {
+        font-family: 'Quicksand', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #fff6fa;
+        padding: 40px 20px;
+    }
+
+    /* === KHUNG THẺ  === */
+    .auth-card {
+        width: 900px;
+        max-width: 100%;
+        background: white;
+        border-radius: 24px;
+        padding: 60px 80px;
+        box-shadow: 0 20px 50px rgba(241, 100, 128, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+        /* Thanh trang trí trên cùng */
+        .auth-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #ff9a9e 0%, #f16480 100%);
+        }
+
+    /* === TIÊU ĐỀ === */
+    .auth-header {
+        text-align: center;
+        margin-bottom: 45px;
+    }
+
+    .auth-title {
+        font-size: 34px;
+        font-weight: 800;
+        color: #f16480;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .auth-subtitle {
+        color: #666;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    /* === GRID === */
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 30px;
+        row-gap: 24px;
+    }
+
+
+    .full-width {
+        grid-column: span 2;
+    }
+
+    /* === INPUT STYLES === */
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-label {
+        font-weight: 700;
+        color: #444;
+        font-size: 13px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
+    }
+
+    .form-control-custom {
+        width: 100%;
+        padding: 14px 18px;
+        border: 2px solid #f0f0f0;
+        border-radius: 12px;
+        background: #fcfcfc;
+        font-size: 15px;
+        font-family: 'Quicksand', sans-serif;
+        color: #333;
+        outline: none;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+
+        /* Hiệu ứng khi bấm vào ô nhập */
+        .form-control-custom:focus {
+            border-color: #f16480;
+            background: white;
+            box-shadow: 0 4px 15px rgba(241, 100, 128, 0.1);
+        }
+
+    /* Tùy chỉnh mũi tên cho ô chọn Giới tính */
+    select.form-control-custom {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f16480' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        background-size: 16px;
+        cursor: pointer;
+    }
+
+    /* === NÚT BẤM === */
+    .btn-submit {
+        grid-column: span 2;
+        padding: 18px;
+        background: #f16480;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 10px 25px rgba(241, 100, 128, 0.25);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 15px;
+    }
+
+        .btn-submit:hover {
+            background: #d64d6b;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(241, 100, 128, 0.35);
+        }
+
+    /* === FOOTER === */
+    .auth-footer {
+        grid-column: span 2;
+        text-align: center;
+        margin-top: 35px;
+        font-size: 15px;
+        color: #666;
+    }
+
+    .back-link {
+        color: #666;
+        text-decoration: none;
+        transition: 0.2s;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .back-link:hover {
+            color: #f16480;
+        }
+
+    .login-highlight {
+        color: #f16480;
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+        .login-highlight:hover {
+            text-decoration: underline;
+        }
+
+    /* === RESPONSIVE MOBILE === */
+    @@media (max-width: 768px) {
+        .auth-card {
+            padding: 40px 20px;
+            width: 100%;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .full-width, .btn-submit, .auth-footer {
+            grid-column: span 1;
+        }
+    }
+</style>
+    <div class="auth-container">
+        <div class="auth-card" style="width: 750px; /* Chiều rộng tối ưu cho form 2 cột */">
+
+            <div class="auth-header">
+                <h2 class="auth-title" style="font-size: 30px;">ĐĂNG KÝ TÀI KHOẢN</h2>
+                <p class="auth-subtitle">Điền thông tin bên dưới để gia nhập phòng thí nghiệm GiftLab! 🐾</p>
+            </div>
+
+            <form asp-action="Register" method="post">
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label asp-for="Ho" class="form-label">HỌ *</label>
+                        <input asp-for="Ho" class="form-control-custom" placeholder="Nguyễn" required />
+                        <span asp-validation-for="Ho" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Ten" class="form-label">TÊN *</label>
+                        <input asp-for="Ten" class="form-control-custom" placeholder="Văn A" required />
+                        <span asp-validation-for="Ten" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="NgaySinh" class="form-label">NGÀY SINH *</label>
+                        <input asp-for="NgaySinh" type="date" class="form-control-custom" required />
+                        <span asp-validation-for="NgaySinh" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="GioiTinh" class="form-label">GIỚI TÍNH *</label>
+                        <select asp-for="GioiTinh" asp-items="@genderSelectList" class="form-control-custom">
+                            <option value="">-- Chọn --</option>
+                        </select>
+                        <span asp-validation-for="GioiTinh" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label asp-for="Email" class="form-label">Địa chỉ Email *</label>
+                        <input asp-for="Email" type="email" class="form-control-custom" placeholder="name@example.com" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Password" class="form-label">Mật khẩu *</label>
+                        <input asp-for="Password" type="password" class="form-control-custom" placeholder="••••••••" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="form-label">Xác nhận mật khẩu *</label>
+                        <input asp-for="ConfirmPassword" type="password" class="form-control-custom" placeholder="••••••••" required />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn-submit" style="margin-top: 15px;">Tạo Tài Khoản</button>
+
+                    <div class="auth-footer">
+                        <a href="@Url.Action(" Index", "Shop" )" class="back-link">
+                            ← Về Cửa Hàng
+                        </a>
+                        <span style="margin: 0 15px; color: #ddd;">|</span>
+                        <span>Đã có tài khoản? <a asp-controller="Account" asp-action="Login" class="login-highlight">Đăng nhập</a></span>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    }

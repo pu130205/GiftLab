@@ -1,0 +1,302 @@
+@model GiftLab.ViewModels.OrderHistoryPageVM
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Đơn hàng của tôi";
+
+    const int STATUS_PENDING = 1;      // Pending
+    const int STATUS_PROCESSING = 2;   // Processing
+    const int STATUS_SHIPPED = 3;      // Shipped
+    const int STATUS_COMPLETED = 4;    // Completed
+    const int STATUS_CANCELLED = 5;    // Cancelled
+
+    var all = Model.Orders ?? new List<GiftLab.ViewModels.OrderHistoryCardVM>();
+    var pending = all.Where(x => x.StatusId == STATUS_PENDING).ToList();
+    var processing = all.Where(x => x.StatusId == STATUS_PROCESSING).ToList();
+    var shipped = all.Where(x => x.StatusId == STATUS_SHIPPED).ToList();
+    var completed = all.Where(x => x.StatusId == STATUS_COMPLETED).ToList();
+    var cancelled = all.Where(x => x.StatusId == STATUS_CANCELLED).ToList();
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+    :root {
+        --gl-pink: #ed708a;
+        --gl-pink-light: #fff0f3;
+        --gl-text: #333333;
+        --gl-muted: #888888;
+        --gl-bg: #f8f9fa;
+        --gl-border: #eeeeee;
+    }
+
+    .acc-wrapper {
+        padding: 60px 0;
+        min-height: 100vh;
+    }
+
+        .acc-wrapper .container {
+            max-width: 1500px;
+            padding-left: 18px;
+            padding-right: 18px;
+        }
+
+    .acc-card {
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(251, 111, 146, 0.3);
+        width: 100%;
+        margin: 0 auto;
+        padding: 36px 40px;
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 46px;
+        overflow: hidden;
+        align-items: start;
+    }
+
+        .acc-card > section {
+            min-width: 0;
+            overflow: hidden;
+        }
+
+    .acc-sidebar {
+        text-align: center;
+        border-right: 1px solid var(--gl-border);
+        padding-right: 26px;
+        height: fit-content;
+        align-self: start;
+    }
+
+    .avatar-circle {
+        width: 110px;
+        height: 110px;
+        background: #f0f0f0;
+        border-radius: 50%;
+        margin: 0 auto 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        color: #ccc;
+    }
+
+    .user-name {
+        font-weight: 800;
+        font-size: 20px;
+        color: var(--gl-text);
+        margin: 0;
+    }
+
+    .user-email {
+        font-size: 14px;
+        color: var(--gl-muted);
+        margin-bottom: 28px;
+    }
+
+    .nav-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        border-radius: 15px;
+        text-decoration: none;
+        color: var(--gl-text);
+        font-weight: 600;
+        font-size: 15px;
+        transition: .25s;
+        background: transparent;
+        border: 1px solid transparent;
+    }
+
+        .nav-item:hover, .nav-item.active-gl {
+            color: var(--gl-pink);
+        }
+
+    .btn-logout-gl {
+        width: 100%;
+        background: var(--gl-pink);
+        color: #fff;
+        border: none;
+        padding: 15px;
+        border-radius: 15px;
+        font-weight: 700;
+        margin-top: 34px;
+        cursor: pointer;
+        transition: .3s;
+        box-shadow: 0 4px 15px rgba(237,112,138,.2);
+    }
+
+        .btn-logout-gl:hover {
+            opacity: .9;
+            transform: translateY(-2px);
+        }
+
+    .oh-title-page {
+        font-weight: 900;
+        font-size: 38px;
+        margin: 0 0 18px;
+    }
+
+    .gl-tabs {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 14px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        padding-bottom: 8px;
+        margin-bottom: 18px;
+        border-bottom: 1px solid rgba(0,0,0,.08);
+        scrollbar-width: thin;
+        max-width: 100%;
+    }
+
+        .gl-tabs::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .gl-tabs::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,.18);
+            border-radius: 99px;
+        }
+
+        .gl-tabs .nav-link {
+            white-space: nowrap;
+            padding: 9px 14px;
+            font-weight: 800;
+            border-radius: 12px;
+            font-size: 14px;
+            flex: 0 0 auto;
+            color: #D70025;
+        }
+
+    .order-list-wrap {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .tab-content, .tab-pane {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    @@media (max-width: 992px) {
+        .acc-wrapper .container {
+            padding-left: 14px;
+            padding-right: 14px;
+        }
+
+        .acc-card {
+            grid-template-columns: 1fr;
+            padding: 26px 18px;
+            gap: 26px;
+        }
+
+        .acc-sidebar {
+            border-right: none;
+            padding-right: 0;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--gl-border);
+        }
+
+        .oh-title-page {
+            font-size: 30px;
+        }
+    }
+</style>
+
+<div class="acc-wrapper">
+    <div class="container">
+        <div class="acc-card">
+
+            <aside class="acc-sidebar">
+                <div class="avatar-circle"><i class="fa-solid fa-circle-user"></i></div>
+
+                <div class="user-info">
+                    <p class="user-name">@Model.FullName</p>
+                    <p class="user-email">@Model.Email</p>
+                </div>
+
+                <nav class="nav-menu">
+                    <a asp-controller="Account" asp-action="Profile" class="nav-item">
+                        <i class="fa-regular fa-user"></i> Thông tin tài khoản
+                    </a>
+
+                    <a asp-controller="Account" asp-action="OrderHistory" class="nav-item active-gl">
+                        <i class="fa-regular fa-rectangle-list"></i> Lịch sử đơn hàng
+                    </a>
+
+                    <a asp-controller="Account" asp-action="ChangePassword" class="nav-item">
+                        <i class="fa-solid fa-shield-halved"></i> Đổi mật khẩu
+                    </a>
+                </nav>
+
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="btn-logout-gl">Đăng xuất</button>
+                </form>
+            </aside>
+
+            <section>
+                <h1 class="oh-title-page">Đơn hàng của tôi</h1>
+
+                <ul class="nav nav-tabs gl-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#all-orders" type="button">Tất cả</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#pending-orders" type="button">Đang chờ</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#processing-orders" type="button">Đang xử lý</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#shipped-orders" type="button">Đang giao</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#completed-orders" type="button">Hoàn thành</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#cancelled-orders" type="button">Đã hủy</button>
+                    </li>
+                </ul>
+
+                <div class="order-list-wrap">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="all-orders" role="tabpanel">
+                            <partial name="_OrderHistoryList" model="all" />
+                        </div>
+
+                        <div class="tab-pane fade" id="pending-orders" role="tabpanel">
+                            <partial name="_OrderHistoryList" model="pending" />
+                        </div>
+
+                        <div class="tab-pane fade" id="processing-orders" role="tabpanel">
+                            <partial name="_OrderHistoryList" model="processing" />
+                        </div>
+
+                        <div class="tab-pane fade" id="shipped-orders" role="tabpanel">
+                            <partial name="_OrderHistoryList" model="shipped" />
+                        </div>
+
+                        <div class="tab-pane fade" id="completed-orders" role="tabpanel">
+                            <partial name="_OrderHistoryList" model="completed" />
+                        </div>
+
+                        <div class="tab-pane fade" id="cancelled-orders" role="tabpanel">
+                            <partial name="_OrderHistoryList" model="cancelled" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</div>
