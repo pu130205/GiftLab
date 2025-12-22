@@ -101,13 +101,34 @@ namespace GiftLab.Controllers
             ModelState.AddModelError("", "Email hoặc mật khẩu không đúng.");
             return View(model);
         }
+        // ========================= FORGOT PASSWORD =========================
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View(new ForgotPasswordViewModel());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var email = (model.Email ?? "").Trim();
+
+            var customer = await _db.Customers
+                .FirstOrDefaultAsync(x => x.Email == email && x.Active == true);
+
+
+            ViewBag.Message = "Nếu email tồn tại, GiftLab đã gửi hướng dẫn đặt lại mật khẩu 💌";
+
+
+            return View(model);
+        }
+
 
         // ========================= GOOGLE LOGIN =========================
-        // View Login nên gọi POST action này bằng form:
-        // <form asp-controller="Account" asp-action="ExternalLogin" method="post">
-        //   @Html.AntiForgeryToken()
-        //   <input type="hidden" name="provider" value="Google" />
-        // </form>
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -447,7 +468,7 @@ namespace GiftLab.Controllers
             var customerId = GetCurrentCustomerId();
             if (customerId == null) return RedirectToAction(nameof(Login));
 
-            // ✅ chỉ cho xem đơn của chính mình
+            // chỉ cho xem đơn của chính mình
             var order = await _db.Orders
                 .AsNoTracking()
                 .Include(o => o.Customer)
@@ -457,7 +478,7 @@ namespace GiftLab.Controllers
 
             if (order == null) return NotFound();
 
-            // ✅ map ProductID -> Thumb từ Products
+            // map ProductID -> Thumb từ Products
             var pids = order.OrderDetails
                 .Select(d => d.ProductID)
                 .Where(x => x.HasValue)
@@ -487,7 +508,7 @@ namespace GiftLab.Controllers
                     {
                         ProductId = d.ProductID,
                         ProductName = d.ProductName ?? "",
-                        Thumb = thumb, // ✅ THUMB THẬT
+                        Thumb = thumb, 
                         Quantity = qty,
                         UnitPrice = unit,
                         LineTotal = line
